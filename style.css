@@ -693,26 +693,32 @@ footer {
 }
 
 /* ==========================================================
-   1. DIET PLAN: WEEKLY SCHEDULE BANNER REFINEMENT
-   Lighter, elegant forest gradient + crisp visible typography
+   1. DIET PLAN: WEEKLY SCHEDULE BANNER (SOFT SAGE LIGHT THEME)
 ========================================================== */
 .diet-banner,
 .weekly-schedule-banner,
-[class*="weekly-schedule"] {
-  background: linear-gradient(135deg, #2C6E49 0%, #3e885d 100%) !important;
-  color: #ffffff !important;
-  padding: 1.8rem 2.2rem !important;
+.weekly-schedule-card,
+[class*="weekly-schedule"],
+#diet-plans .card:first-child,
+#my-diet-plans .card:first-child {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%) !important;
+  border: 1px solid #bbf7d0 !important;
   border-radius: 20px !important;
-  box-shadow: 0 10px 25px rgba(44, 110, 73, 0.18) !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  padding: 1.8rem 2.2rem !important;
+  box-shadow: 0 4px 20px rgba(44, 110, 73, 0.05) !important;
 }
 
 .diet-banner h2,
 .diet-banner h3,
 .weekly-schedule-banner h2,
 .weekly-schedule-banner h3,
-.weekly-schedule-banner .banner-title {
-  color: #ffffff !important;
+.weekly-schedule-card h2,
+.weekly-schedule-card h3,
+[class*="weekly-schedule"] h2,
+[class*="weekly-schedule"] h3,
+#diet-plans .card:first-child h2,
+#diet-plans .card:first-child h3 {
+  color: #1e3d33 !important;
   font-weight: 700 !important;
   font-size: 1.5rem !important;
   margin-bottom: 0.3rem !important;
@@ -720,40 +726,53 @@ footer {
 
 .diet-banner p,
 .weekly-schedule-banner p,
-.weekly-schedule-banner .banner-sub {
-  color: #e2f1e8 !important;
-  font-weight: 500 !important;
+.weekly-schedule-card p,
+[class*="weekly-schedule"] p,
+#diet-plans .card:first-child p {
+  color: #3b6b55 !important;
+  font-weight: 600 !important;
   font-size: 0.95rem !important;
 }
 
-/* Download PDF Button Styling */
+/* Download PDF Button */
 .diet-banner .btn,
 .weekly-schedule-banner .btn,
-.weekly-schedule-banner button,
-.weekly-schedule-banner a {
-  background: rgba(255, 255, 255, 0.18) !important;
-  backdrop-filter: blur(8px) !important;
-  -webkit-backdrop-filter: blur(8px) !important;
+.weekly-schedule-card .btn,
+.weekly-schedule-card a,
+[class*="weekly-schedule"] button,
+[class*="weekly-schedule"] a,
+#diet-plans .card:first-child .btn,
+#diet-plans .card:first-child a {
+  background: #2C6E49 !important;
   color: #ffffff !important;
-  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  border: none !important;
   border-radius: 50px !important;
   font-weight: 600 !important;
-  padding: 0.65rem 1.4rem !important;
+  padding: 0.7rem 1.6rem !important;
+  box-shadow: 0 4px 12px rgba(44, 110, 73, 0.2) !important;
   transition: all 0.25s ease !important;
+  text-decoration: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
 }
 
 .diet-banner .btn:hover,
 .weekly-schedule-banner .btn:hover,
-.weekly-schedule-banner button:hover,
-.weekly-schedule-banner a:hover {
-  background: #ffffff !important;
-  color: #2C6E49 !important;
+.weekly-schedule-card .btn:hover,
+.weekly-schedule-card a:hover,
+[class*="weekly-schedule"] button:hover,
+[class*="weekly-schedule"] a:hover,
+#diet-plans .card:first-child .btn:hover,
+#diet-plans .card:first-child a:hover {
+  background: #1f5236 !important;
+  color: #ffffff !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 16px rgba(44, 110, 73, 0.3) !important;
 }
 
 /* ==========================================================
    2. REWARDS: 4-COLUMN SINGLE ROW COMPACT GRID
-   Forces all 4 cards (Rewards, Coupons, Minutes, Referrals)
-   into 1 neat row with compact padding.
 ========================================================== */
 .rewards-grid,
 .reward-stats-grid,
@@ -764,7 +783,6 @@ footer {
   margin-bottom: 2rem !important;
 }
 
-/* Compact Card Sizing */
 .rewards-grid .stat-card,
 .reward-stats-grid .stat-card,
 #rewards .stat-card {
@@ -804,7 +822,6 @@ footer {
 
 /* ==========================================================
    3. MESSAGES: ELEVATED CHAT CONTAINER & BUBBLES
-   Distinct white card elevated from grey background canvas
 ========================================================== */
 .chat-container,
 .messages-box,
@@ -817,7 +834,6 @@ footer {
   overflow: hidden !important;
 }
 
-/* Chat Header */
 .chat-header {
   padding: 1.2rem 1.8rem !important;
   background: #ffffff !important;
@@ -836,7 +852,6 @@ footer {
   font-size: 0.8rem !important;
 }
 
-/* Chat Body (Soft Tint to Differentiate from Bubbles) */
 .chat-messages,
 .chat-body,
 .message-history {
@@ -845,7 +860,6 @@ footer {
   min-height: 380px !important;
 }
 
-/* Incoming Message Bubble (Elevated White on Soft Grey) */
 .message-incoming,
 .msg-received,
 .message-bubble.incoming {
@@ -858,7 +872,6 @@ footer {
   font-weight: 500 !important;
 }
 
-/* Outgoing Message Bubble (Brand Forest Green) */
 .message-outgoing,
 .msg-sent,
 .message-bubble.outgoing {
@@ -876,7 +889,6 @@ footer {
   margin-top: 4px !important;
 }
 
-/* Message Input Area */
 .chat-input-container,
 .message-input-box {
   background: #ffffff !important;
