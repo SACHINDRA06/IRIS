@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diet Plans & Packages | AharaX Wellness</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        .plan-card {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 3rem 2rem;
+            border-radius: 30px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            text-align: center;
+            position: relative;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .plan-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+        .plan-card.featured {
+            border: 2px solid var(--primary);
+            transform: scale(1.05);
+            z-index: 1;
+        }
+        .plan-card.featured:hover {
+            transform: translateY(-10px) scale(1.05);
+        }
+        .featured-label {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .plan-name {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        .plan-price {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-family: var(--font-main);
+        }
+        .plan-duration {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+        .plan-features {
+            text-align: left;
+            margin-bottom: 2.5rem;
+            flex-grow: 1;
+        }
+        .plan-features li {
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 0.75rem;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+        }
+        .plan-features li i {
+            color: var(--primary);
+            flex-shrink: 0;
+            width: 18px;
+        }
+        .plan-cta {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
+    <div class="bg-blob blob-3"></div>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="index.html" class="logo">
+                    <i data-lucide="leaf"></i>
+                    AharaX Wellness
+                </a>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="plans.html" class="active">Diet Plans</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+                <div style="display: flex; align-items: center; gap: 1.5rem;">
+                    <a href="login.html" style="font-weight: 600; font-size: 0.9rem; color: var(--text-dark);">Sign In</a>
+                    <a href="contact.html#book" class="cta-button">Book Consultation</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="section" style="padding-top: 150px;">
+            <div class="container">
+                <div style="text-align: center; max-width: 700px; margin: 0 auto 4rem;">
+                    <h1 style="font-size: 3rem; margin-bottom: 1rem;">Choose Your Path to Wellness</h1>
+                    <p style="color: var(--text-muted); font-size: 1.1rem;">Transparent pricing for personalized, results-driven nutrition consultation. Select a package that fits your goals.</p>
+                </div>
+
+                <!-- Duration Toggle (Optional Visual) -->
+                <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 3rem;">
+                    <button class="cta-button" style="padding: 0.5rem 1.5rem; font-size: 0.8rem;">Monthly Plans</button>
+                    <button class="cta-button outline" style="padding: 0.5rem 1.5rem; font-size: 0.8rem;">Quarterly Plans (Save 15%)</button>
+                </div>
+
+                <div class="plans-grid">
+                    <!-- Basic -->
+                    <div class="plan-card clr-5">
+                        <h3 class="plan-name" style="color: var(--clr-slate);">Basic Wellness</h3>
+                        <div class="plan-price">₹1,999</div>
+                        <p class="plan-duration">Per Month</p>
+                        <ul class="plan-features">
+                            <li><i data-lucide="check-circle" style="color: var(--clr-slate);"></i> Initial Consultation (45 mins)</li>
+                            <li><i data-lucide="check-circle" style="color: var(--clr-slate);"></i> Basic Meal Plan Customization</li>
+                            <li><i data-lucide="check-circle" style="color: var(--clr-slate);"></i> Weekly Progress Review (via Chat)</li>
+                            <li><i data-lucide="check-circle" style="color: var(--clr-slate);"></i> Email Support</li>
+                        </ul>
+                        <a href="contact.html?plan=basic" class="cta-button outline plan-cta" style="border-color: var(--clr-slate); color: var(--clr-slate);">Choose Basic</a>
+                    </div>
+
+                    <!-- Standard -->
+                    <div class="plan-card featured clr-1">
+                        <div class="featured-label" style="background: var(--clr-forest);">Most Popular</div>
+                        <h3 class="plan-name" style="color: var(--clr-forest);">Standard Care</h3>
+                        <div class="plan-price">₹4,499</div>
+                        <p class="plan-duration">Per Month</p>
+                        <ul class="plan-features">
+                            <li><i data-lucide="check-circle" style="color: var(--clr-forest);"></i> Deep Clinical Consultation</li>
+                            <li><i data-lucide="check-circle" style="color: var(--clr-forest);"></i> Fully Personalized Therapeutic Diet</li>
+                            <li><i data-lucide="check-circle" style="color: var(--clr-forest);"></i> Bi-Weekly Video Follow-ups</li>
+                            <li><i data-lucide="check-circle" style="color: var(--clr-forest);"></i> Priority WhatsApp Support</li>
+                        </ul>
+                        <a href="contact.html?plan=standard" class="cta-button plan-cta" style="background: var(--clr-forest);">Start Transformation</a>
+                    </div>
+
+                    <!-- Premium -->
+                    <div class="plan-card clr-6">
+                        <h3 class="plan-name" style="color: var(--clr-plum);">Premium Lifestyle</h3>
+                        <div class="plan-price">₹7,999</div>
+                        <p class="plan-duration">Per Month</p>
+                        <ul class="plan-features">
+                            <li><i data-lucide="check-circle" style="color: var(--clr-plum);"></i> All Standard Features</li>
+                            <li><i data-lucide="check-circle" style="color: var(--clr-plum);"></i> Daily Accountability Checks</li>
+                            <li><i data-lucide="check-circle" style="color: var(--clr-plum);"></i> 24/7 Direct WhatsApp Access</li>
+                            <li><i data-lucide="check-circle" style="color: var(--clr-plum);"></i> Kitchen Audit (Virtual)</li>
+                        </ul>
+                        <a href="contact.html?plan=premium" class="cta-button outline plan-cta" style="border-color: var(--clr-plum); color: var(--clr-plum);">Go Premium</a>
+                    </div>
+                </div>
+
+                <div style="margin-top: 6rem; text-align: center; border-top: 1px solid #eee; padding-top: 4rem;">
+                    <h2 style="margin-bottom: 1.5rem;">Frequently Asked Questions</h2>
+                    <div style="max-width: 800px; margin: 0 auto; text-align: left; display: grid; gap: 1.5rem;">
+                        <details style="background: var(--bg-alt); padding: 1.5rem; border-radius: 15px; cursor: pointer;">
+                            <summary style="font-weight: 600; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+                                Do I get a refund if I'm not satisfied? <i data-lucide="chevron-down" style="width: 18px;"></i>
+                            </summary>
+                            <p style="margin-top: 1rem; color: var(--text-muted);">We offer a full refund if requested within the first 7 days of the program, provided the first consultation hasn't taken place.</p>
+                        </details>
+                        <details style="background: var(--bg-alt); padding: 1.5rem; border-radius: 15px; cursor: pointer;">
+                            <summary style="font-weight: 600; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+                                Are these plans suitable for medical conditions? <i data-lucide="chevron-down" style="width: 18px;"></i>
+                            </summary>
+                            <p style="margin-top: 1rem; color: var(--text-muted);">Yes, our Standard and Premium plans are specifically designed for clinical conditions like PCOS, Diabetes, and Thyroid issues, involving deep medical report analysis.</p>
+                        </details>
+                        <details style="background: var(--bg-alt); padding: 1.5rem; border-radius: 15px; cursor: pointer;">
+                            <summary style="font-weight: 600; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+                                How long does it take to see results? <i data-lucide="chevron-down" style="width: 18px;"></i>
+                            </summary>
+                            <p style="margin-top: 1rem; color: var(--text-muted);">While consistency is key, most clients start noticing energy improvements within 2 weeks and visible metabolic changes within 4-6 weeks.</p>
+                        </details>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-info">
+                    <a href="#" class="footer-logo">AharaX Wellness</a>
+                    <p style="color: #a0aec0;">Personalized diet care for a healthier, happier you.</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 AharaX Wellness. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+</body>
+</html>

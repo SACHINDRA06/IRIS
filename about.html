@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | AharaX Wellness</title>
+    <meta name="description" content="Learn about AharaX Wellness – our mission, our founder, and the values behind our personalized nutrition care.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Section Backgrounds - Differentiated */
+        .section-hero    { background: transparent; }
+        .section-founder { background: rgba(30, 61, 51, 0.03); }
+        .section-values  { background: white; }
+        .section-stats   { background: var(--primary); }
+        .section-team    { background: rgba(61, 90, 128, 0.03); }
+        .section-cta     { background: transparent; }
+
+        /* Window Cards */
+        .about-window {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 28px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            padding: 2.5rem;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+        }
+        .about-window:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+
+        /* Value Cards */
+        .value-card {
+            background: white;
+            border-radius: 24px;
+            padding: 2.5rem;
+            border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .value-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+
+        .value-icon {
+            width: 70px; height: 70px;
+            border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        /* Stats */
+        .stat-item { text-align: center; padding: 2rem; }
+        .stat-num  { font-size: 3.5rem; font-weight: 800; font-family: var(--font-main); color: white; line-height: 1; }
+        .stat-label { color: rgba(255,255,255,0.75); font-size: 0.95rem; margin-top: 0.5rem; }
+
+        /* Team Card */
+        .team-card {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+        .team-card:hover { transform: translateY(-8px); }
+
+        /* Process Steps */
+        .step-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            border-left: 5px solid var(--primary);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            display: flex;
+            gap: 1.5rem;
+            align-items: flex-start;
+            transition: transform 0.3s ease;
+        }
+        .step-card:hover { transform: translateX(8px); }
+        .step-num {
+            width: 50px; height: 50px; min-width: 50px;
+            background: var(--primary); color: white;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 1.1rem; font-family: var(--font-main);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
+    <div class="bg-blob blob-3"></div>
+
+    <header>
+        <div class="container">
+            <nav>
+                <a href="index.html" class="logo"><i data-lucide="leaf"></i> AharaX Wellness</a>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html" class="active">About Us</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="plans.html">Diet Plans</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+                <div style="display: flex; align-items: center; gap: 1.5rem;">
+                    <a href="login.html" style="font-weight: 600; font-size: 0.9rem; color: var(--text-dark);">Sign In</a>
+                    <a href="contact.html#book" class="cta-button">Book Consultation</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="section section-hero" style="padding-top: 150px;">
+            <div class="container">
+                <div style="text-align: center; max-width: 850px; margin: 0 auto;">
+                    <span style="background: rgba(30,61,51,0.08); color: var(--primary); padding: 0.4rem 1.2rem; border-radius: 50px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Our Story</span>
+                    <h1 style="font-size: 4rem; margin: 1.5rem 0; line-height: 1.1;">Empowering Health<br>Through Nutrition</h1>
+                    <p style="font-size: 1.2rem; color: var(--text-muted); line-height: 1.8;">At AharaX Wellness, we believe that food is medicine. Our mission is to make personalized, science-backed nutrition accessible to every individual, no matter their health condition or lifestyle.</p>
+                </div>
+
+                <!-- Stats Row in Hero -->
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 5rem;">
+                    <div class="about-window" style="text-align: center; border-top: 4px solid #4ade80;">
+                        <h3 style="font-size: 2.5rem; color: #166534; font-family: var(--font-main);">500+</h3>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">Happy Clients</p>
+                    </div>
+                    <div class="about-window" style="text-align: center; border-top: 4px solid #a78bfa;">
+                        <h3 style="font-size: 2.5rem; color: #5b21b6; font-family: var(--font-main);">5+</h3>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">Years Experience</p>
+                    </div>
+                    <div class="about-window" style="text-align: center; border-top: 4px solid #fb923c;">
+                        <h3 style="font-size: 2.5rem; color: #9a3412; font-family: var(--font-main);">98%</h3>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">Client Satisfaction</p>
+                    </div>
+                    <div class="about-window" style="text-align: center; border-top: 4px solid #60a5fa;">
+                        <h3 style="font-size: 2.5rem; color: #1e40af; font-family: var(--font-main);">12+</h3>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">Conditions Managed</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Founder Section -->
+        <section class="section section-founder">
+            <div class="container">
+                <div style="display: grid; grid-template-columns: 1fr 1.3fr; gap: 5rem; align-items: center;">
+                    <div style="position: relative;">
+                        <img src="https://images.unsplash.com/photo-1559839734-2b71f1536783?auto=format&fit=crop&q=80&w=800" alt="Founder - Registered Dietitian" style="border-radius: 30px; box-shadow: var(--shadow-lg); width: 100%;">
+                        <div style="position: absolute; bottom: -20px; right: -20px; background: var(--primary); color: white; padding: 1.5rem; border-radius: 20px; text-align: center; min-width: 130px;">
+                            <p style="font-size: 1rem; font-weight: 800; font-family: var(--font-main); line-height: 1.3;">Sridevi<br>Vadivel</p>
+                            <p style="font-size: 0.7rem; opacity: 0.85; margin-top: 0.3rem;">Dietitian</p>
+                        </div>
+                    </div>
+                    <div>
+                        <span style="background: rgba(30,61,51,0.08); color: var(--primary); padding: 0.4rem 1.2rem; border-radius: 50px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Meet Our Founder</span>
+                        <h2 style="font-size: 2.8rem; margin: 1.5rem 0 0.5rem;">Sridevi Vadivel</h2>
+                        <p style="color: var(--primary); font-weight: 600; font-size: 1.1rem; margin-bottom: 1rem;">Dietitian &amp; Founder, AharaX Wellness</p>
+                        <p style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.9; margin-bottom: 1.5rem;">Founded by a passionate Clinical Registered Dietitian with over 5 years of hands-on experience in therapeutic nutrition, AharaX Wellness was born from a deep desire to make personalized care accessible to everyone — not just the privileged few.</p>
+                        <p style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.9; margin-bottom: 2rem;">With a specialization in South Indian dietary patterns, hormonal health, and clinical conditions such as PCOS, Diabetes, and Thyroid disorders, our founder brings both scientific rigor and cultural sensitivity to every single consultation.</p>
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                            <div class="about-window" style="padding: 1rem 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
+                                <i data-lucide="award" style="width: 20px; color: var(--primary);"></i>
+                                <span style="font-size: 0.9rem; font-weight: 600;">Certified Clinical Nutritionist</span>
+                            </div>
+                            <div class="about-window" style="padding: 1rem 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
+                                <i data-lucide="graduation-cap" style="width: 20px; color: var(--primary);"></i>
+                                <span style="font-size: 0.9rem; font-weight: 600;">M.Sc. Clinical Nutrition</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Values Section -->
+        <section class="section section-values">
+            <div class="container">
+                <div style="text-align: center; max-width: 700px; margin: 0 auto 4rem;">
+                    <h2 style="font-size: 2.8rem; margin-bottom: 1rem;">What We Stand For</h2>
+                    <p style="color: var(--text-muted); font-size: 1.1rem;">Our core values guide every decision, every plan, and every conversation we have with our clients.</p>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;">
+                    <div class="value-card">
+                        <div class="value-icon" style="background: rgba(74, 222, 128, 0.1);">
+                            <i data-lucide="target" style="width: 30px; color: #166534;"></i>
+                        </div>
+                        <h3 style="margin-bottom: 1rem; color: #166534;">Our Mission</h3>
+                        <p style="color: var(--text-muted); line-height: 1.8;">To transform lives through personalized, science-based nutrition that is both practical and deeply enjoyable — no starvation, no shortcuts.</p>
+                    </div>
+                    <div class="value-card" style="border-top: 4px solid var(--primary); transform: scale(1.03);">
+                        <div class="value-icon" style="background: rgba(30, 61, 51, 0.1);">
+                            <i data-lucide="eye" style="width: 30px; color: var(--primary);"></i>
+                        </div>
+                        <h3 style="margin-bottom: 1rem; color: var(--primary);">Our Vision</h3>
+                        <p style="color: var(--text-muted); line-height: 1.8;">To become India's most trusted online platform for sustainable health improvement — where every individual feels seen, heard, and empowered.</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="value-icon" style="background: rgba(96, 165, 250, 0.1);">
+                            <i data-lucide="shield-check" style="width: 30px; color: #1e40af;"></i>
+                        </div>
+                        <h3 style="margin-bottom: 1rem; color: #1e40af;">Our Approach</h3>
+                        <p style="color: var(--text-muted); line-height: 1.8;">Personalized, sustainable, and practical. We focus on real food and real lifestyle shifts — changes that last a lifetime, not just 30 days.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Banner -->
+        <section class="section section-stats">
+            <div class="container">
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr);">
+                    <div class="stat-item">
+                        <div class="stat-num">500+</div>
+                        <div class="stat-label">Clients Transformed</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">12+</div>
+                        <div class="stat-label">Health Conditions Covered</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">98%</div>
+                        <div class="stat-label">Client Satisfaction Rate</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">5+</div>
+                        <div class="stat-label">Years of Clinical Practice</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How We Work Section -->
+        <section class="section section-team">
+            <div class="container">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start;">
+                    <div>
+                        <span style="background: rgba(30,61,51,0.08); color: var(--primary); padding: 0.4rem 1.2rem; border-radius: 50px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Our Process</span>
+                        <h2 style="font-size: 2.8rem; margin: 1.5rem 0 3rem;">How We Work With You</h2>
+                        <div style="display: grid; gap: 1.5rem;">
+                            <div class="step-card">
+                                <div class="step-num">01</div>
+                                <div>
+                                    <h4 style="margin-bottom: 0.5rem;">Initial Health Assessment</h4>
+                                    <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.7;">We start with a deep-dive consultation — reviewing your medical history, blood reports, dietary habits, and lifestyle patterns.</p>
+                                </div>
+                            </div>
+                            <div class="step-card" style="border-left-color: #a78bfa;">
+                                <div class="step-num" style="background: #5b21b6;">02</div>
+                                <div>
+                                    <h4 style="margin-bottom: 0.5rem;">Personalized Plan Creation</h4>
+                                    <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.7;">A fully customized diet plan is crafted — one that fits your culture, budget, taste preferences, and medical needs.</p>
+                                </div>
+                            </div>
+                            <div class="step-card" style="border-left-color: #fb923c;">
+                                <div class="step-num" style="background: #9a3412;">03</div>
+                                <div>
+                                    <h4 style="margin-bottom: 0.5rem;">Ongoing Monitoring</h4>
+                                    <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.7;">Regular follow-ups via video or WhatsApp ensure you stay on track and your plan evolves with your progress.</p>
+                                </div>
+                            </div>
+                            <div class="step-card" style="border-left-color: #60a5fa;">
+                                <div class="step-num" style="background: #1e40af;">04</div>
+                                <div>
+                                    <h4 style="margin-bottom: 0.5rem;">Lifestyle Integration</h4>
+                                    <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.7;">We help you build sustainable habits so that healthy eating becomes second nature — not a constant struggle.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <span style="background: rgba(30,61,51,0.08); color: var(--primary); padding: 0.4rem 1.2rem; border-radius: 50px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Why Choose Us</span>
+                        <h2 style="font-size: 2.8rem; margin: 1.5rem 0 3rem;">What Makes Us Different</h2>
+                        <div style="display: grid; gap: 1.5rem;">
+                            <div class="about-window" style="display: flex; gap: 1.5rem; align-items: flex-start;">
+                                <div style="width: 50px; height: 50px; min-width: 50px; background: rgba(74,222,128,0.1); border-radius: 14px; display: flex; align-items: center; justify-content: center;">
+                                    <i data-lucide="users" style="width: 22px; color: #166534;"></i>
+                                </div>
+                                <div>
+                                    <h4 style="margin-bottom: 0.4rem;">South Indian Nutrition Expertise</h4>
+                                    <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.7;">We don't ignore your culture. Our plans celebrate traditional foods like Ragi, Millets, Idli, and Rasam — making them healthier, not eliminating them.</p>
+                                </div>
+                            </div>
+                            <div class="about-window" style="display: flex; gap: 1.5rem; align-items: flex-start;">
+                                <div style="width: 50px; height: 50px; min-width: 50px; background: rgba(167,139,250,0.1); border-radius: 14px; display: flex; align-items: center; justify-content: center;">
+                                    <i data-lucide="flask-conical" style="width: 22px; color: #5b21b6;"></i>
+                                </div>
+                                <div>
+                                    <h4 style="margin-bottom: 0.4rem;">Evidence-Based Clinical Approach</h4>
+                                    <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.7;">Every recommendation is rooted in the latest nutrition science and tailored to clinical parameters — not generic advice.</p>
+                                </div>
+                            </div>
+                            <div class="about-window" style="display: flex; gap: 1.5rem; align-items: flex-start;">
+                                <div style="width: 50px; height: 50px; min-width: 50px; background: rgba(251,146,60,0.1); border-radius: 14px; display: flex; align-items: center; justify-content: center;">
+                                    <i data-lucide="message-circle" style="width: 22px; color: #9a3412;"></i>
+                                </div>
+                                <div>
+                                    <h4 style="margin-bottom: 0.4rem;">Continuous WhatsApp Support</h4>
+                                    <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.7;">You are never alone on this journey. Our dietitians are available for real-time guidance through weekly check-ins and direct messaging.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="section section-cta">
+            <div class="container">
+                <div style="background: var(--primary); border-radius: 40px; padding: 6rem; text-align: center; position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: -50px; right: -50px; width: 300px; height: 300px; background: rgba(255,255,255,0.05); border-radius: 50%;"></div>
+                    <div style="position: absolute; bottom: -80px; left: -30px; width: 250px; height: 250px; background: rgba(255,255,255,0.04); border-radius: 50%;"></div>
+                    <div style="position: relative; z-index: 1;">
+                        <h2 style="color: white; font-size: 3rem; margin-bottom: 1.5rem;">Ready to Start Your Journey?</h2>
+                        <p style="color: rgba(255,255,255,0.8); font-size: 1.2rem; max-width: 600px; margin: 0 auto 3rem; line-height: 1.8;">Let's work together to create a nutrition plan that heals your body, respects your culture, and fits your life. Your first consultation is just one click away.</p>
+                        <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
+                            <a href="contact.html#book" class="cta-button" style="background: white; color: var(--primary); font-size: 1rem; padding: 1rem 2.5rem;">Book Your Consultation</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-info">
+                    <a href="#" class="footer-logo">AharaX Wellness</a>
+                    <p style="color: #a0aec0; margin-bottom: 1.5rem;">Personalized diet care for a healthier, happier you. Science-based and sustainable nutrition.</p>
+                    <div style="display: flex; gap: 1rem;">
+                        <a href="#"><i data-lucide="instagram"></i></a>
+                        <a href="#"><i data-lucide="facebook"></i></a>
+                        <a href="#"><i data-lucide="linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="plans.html">Diet Plans</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="blog.html">Resources</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                        <li><a href="#">FAQs</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li style="display: flex; gap: 0.5rem;"><i data-lucide="mail" style="width: 16px;"></i> consult.aharaxwellness@gmail.com</li>
+                        <li style="display: flex; gap: 0.5rem;"><i data-lucide="phone" style="width: 16px;"></i> +91 78069 77057</li>
+                        <li style="display: flex; gap: 0.5rem;"><i data-lucide="map-pin" style="width: 16px;"></i> Online Consultations</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 AharaX Wellness. All rights reserved.</p>
+                <p>Designed with <i data-lucide="heart" style="width: 12px; display: inline; color: #e53e3e;"></i> for wellness.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

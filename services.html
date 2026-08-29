@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services | AharaX Wellness</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .service-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: var(--glass-shadow);
+            border: 1px solid var(--glass-border);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Category Differentiators */
+        .card-weight { border-top: 5px solid #4ade80; }
+        .card-weight .service-tag { background: rgba(74, 222, 128, 0.1); color: #166534; }
+
+        .card-pcos { border-top: 5px solid #a78bfa; }
+        .card-pcos .service-tag { background: rgba(167, 139, 250, 0.1); color: #5b21b6; }
+
+        .card-diabetes { border-top: 5px solid #fb923c; }
+        .card-diabetes .service-tag { background: rgba(251, 146, 60, 0.1); color: #9a3412; }
+
+        .card-maternal { border-top: 5px solid #fca5a5; }
+        .card-maternal .service-tag { background: rgba(252, 165, 165, 0.1); color: #991b1b; }
+
+        .card-thyroid { border-top: 5px solid #60a5fa; }
+        .card-thyroid .service-tag { background: rgba(96, 165, 250, 0.1); color: #1e40af; }
+
+        .card-clinical { border-top: 5px solid #94a3b8; }
+        .card-clinical .service-tag { background: rgba(148, 163, 184, 0.1); color: #334155; }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .service-img {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .service-content {
+            padding: 2rem;
+        }
+
+        .service-content h3 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .service-tag {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--primary);
+            background: var(--accent);
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .service-features li {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 0.6rem;
+            line-height: 1.5;
+        }
+
+        .service-features li i {
+            flex-shrink: 0;
+            width: 16px;
+        }
+
+        .service-cta {
+            display: block;
+            text-align: center;
+            margin-top: 1.5rem;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            border: 2px solid currentColor;
+        }
+        .service-cta:hover { opacity: 0.85; transform: translateY(-2px); }
+
+        .filter-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 4rem;
+        }
+
+        details {
+            background: var(--glass-bg);
+            padding: 1.5rem;
+            border-radius: 15px;
+            cursor: pointer;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        details:hover {
+            transform: translateX(5px);
+            background: white;
+        }
+
+        summary {
+            font-weight: 600;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: var(--font-main);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
+    <div class="bg-blob blob-3"></div>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="index.html" class="logo">
+                    <i data-lucide="leaf"></i>
+                    AharaX Wellness
+                </a>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="services.html" class="active">Services</a></li>
+                    <li><a href="plans.html">Diet Plans</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+                <div style="display: flex; align-items: center; gap: 1.5rem;">
+                    <a href="login.html" style="font-weight: 600; font-size: 0.9rem; color: var(--text-dark);">Sign In</a>
+                    <a href="contact.html#book" class="cta-button">Book Consultation</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="section" style="padding-top: 150px;">
+            <div class="container">
+                <div style="text-align: center; max-width: 800px; margin: 0 auto 4rem;">
+                    <span style="background: rgba(30,61,51,0.08); color: var(--primary); padding: 0.4rem 1.2rem; border-radius: 50px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; display: inline-block; margin-bottom: 1.5rem;">Specialized Programs</span>
+                    <h1 style="font-size: 3.5rem; margin-bottom: 1.5rem;">Clinical Excellence in Nutrition</h1>
+                    <p style="color: var(--text-muted); font-size: 1.2rem; line-height: 1.8;">Evidence-based nutrition therapy designed to heal your body from within. Choose a specialization tailored to your condition.</p>
+                </div>
+
+                <div class="filter-toggle">
+                    <button class="cta-button" style="padding: 0.5rem 1.5rem; font-size: 0.8rem;">All Services</button>
+                    <button class="cta-button outline" style="padding: 0.5rem 1.5rem; font-size: 0.8rem;">Clinical Care</button>
+                    <button class="cta-button outline" style="padding: 0.5rem 1.5rem; font-size: 0.8rem;">Lifestyle</button>
+                </div>
+
+                <div class="services-grid">
+                    <!-- Weight Loss -->
+                    <div class="service-card card-weight">
+                        <div class="service-img" style="background-image: url('https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=600');"></div>
+                        <div class="service-content">
+                            <span class="service-tag">Lifestyle</span>
+                            <h3 style="color: #166534;">Weight Loss Programs</h3>
+                            <p style="color: var(--text-muted); font-size: 0.95rem;">Sustainable weight loss focusing on fat loss and muscle retention without extreme dieting.</p>
+                            <ul class="service-features" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #f0f0f0;">
+                                <li><i data-lucide="check" style="color: #166534;"></i> Personalized Calorie Management</li>
+                                <li><i data-lucide="check" style="color: #166534;"></i> Weekly Progress Tracking</li>
+                                <li><i data-lucide="check" style="color: #166534;"></i> Anti-Craving Meal Strategies</li>
+                            </ul>
+                            <a href="contact.html" class="service-cta" style="color: #166534; border-color: rgba(74,222,128,0.4); background: rgba(74,222,128,0.05);">Book Consultation &rarr;</a>
+                        </div>
+                    </div>
+
+                    <!-- PCOS -->
+                    <div class="service-card card-pcos">
+                        <div class="service-img" style="background-image: url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=600');"></div>
+                        <div class="service-content">
+                            <span class="service-tag">Hormonal Health</span>
+                            <h3 style="color: #5b21b6;">PCOS Management</h3>
+                            <p style="color: var(--text-muted); font-size: 0.95rem;">Addressing insulin resistance and hormonal imbalance through specialized anti-inflammatory diets.</p>
+                            <ul class="service-features" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #f0f0f0;">
+                                <li><i data-lucide="check" style="color: #5b21b6;"></i> Insulin Sensitivity Focus</li>
+                                <li><i data-lucide="check" style="color: #5b21b6;"></i> Hormonal Balance Meals</li>
+                                <li><i data-lucide="check" style="color: #5b21b6;"></i> Anti-Inflammatory Diet Plan</li>
+                            </ul>
+                            <a href="contact.html" class="service-cta" style="color: #5b21b6; border-color: rgba(167,139,250,0.4); background: rgba(167,139,250,0.05);">Book Consultation &rarr;</a>
+                        </div>
+                    </div>
+
+                    <!-- Diabetes -->
+                    <div class="service-card card-diabetes">
+                        <div class="service-img" style="background-image: url('https://images.unsplash.com/photo-1610192244261-3f33de3f55e4?auto=format&fit=crop&q=80&w=800');"></div>
+                        <div class="service-content">
+                            <span class="service-tag">Clinical</span>
+                            <h3 style="color: #9a3412;">Diabetes Management</h3>
+                            <p style="color: var(--text-muted); font-size: 0.95rem;">Blood sugar control through Low Glycemic Index foods and meal timing strategies.</p>
+                            <ul class="service-features" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #f0f0f0;">
+                                <li><i data-lucide="check" style="color: #9a3412;"></i> Carb Counting Guidance</li>
+                                <li><i data-lucide="check" style="color: #9a3412;"></i> HbA1c Improvement Focus</li>
+                                <li><i data-lucide="check" style="color: #9a3412;"></i> Low GI Meal Planning</li>
+                            </ul>
+                            <a href="contact.html" class="service-cta" style="color: #9a3412; border-color: rgba(251,146,60,0.4); background: rgba(251,146,60,0.05);">Book Consultation &rarr;</a>
+                        </div>
+                    </div>
+
+                    <!-- Pregnancy -->
+                    <div class="service-card card-maternal">
+                        <div class="service-img" style="background-image: url('https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?auto=format&fit=crop&q=80&w=800');"></div>
+                        <div class="service-content">
+                            <span class="service-tag">Maternal</span>
+                            <h3 style="color: #991b1b;">Pregnancy Nutrition</h3>
+                            <p style="color: var(--text-muted); font-size: 0.95rem;">Ensuring optimal nutrition for both mother and baby through every trimester.</p>
+                            <ul class="service-features" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #f0f0f0;">
+                                <li><i data-lucide="check" style="color: #991b1b;"></i> Micronutrient Optimization</li>
+                                <li><i data-lucide="check" style="color: #991b1b;"></i> Healthy Weight Gain Tracking</li>
+                                <li><i data-lucide="check" style="color: #991b1b;"></i> Trimester-wise Meal Plans</li>
+                            </ul>
+                            <a href="contact.html" class="service-cta" style="color: #991b1b; border-color: rgba(252,165,165,0.4); background: rgba(252,165,165,0.05);">Book Consultation &rarr;</a>
+                        </div>
+                    </div>
+
+                    <!-- Thyroid -->
+                    <div class="service-card card-thyroid">
+                        <div class="service-img" style="background-image: url('https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&q=80&w=800');"></div>
+                        <div class="service-content">
+                            <span class="service-tag">Hormonal Health</span>
+                            <h3 style="color: #1e40af;">Thyroid Diet Plans</h3>
+                            <p style="color: var(--text-muted); font-size: 0.95rem;">Supporting metabolism and thyroid function with iodine-rich and nutrient-dense foods.</p>
+                            <ul class="service-features" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #f0f0f0;">
+                                <li><i data-lucide="check" style="color: #1e40af;"></i> Metabolism Boosting Plans</li>
+                                <li><i data-lucide="check" style="color: #1e40af;"></i> Gut Health Support</li>
+                                <li><i data-lucide="check" style="color: #1e40af;"></i> Hypo/Hyper-thyroid Focus</li>
+                            </ul>
+                            <a href="contact.html" class="service-cta" style="color: #1e40af; border-color: rgba(96,165,250,0.4); background: rgba(96,165,250,0.05);">Book Consultation &rarr;</a>
+                        </div>
+                    </div>
+
+                    <!-- Renal/Cardiac -->
+                    <div class="service-card card-clinical">
+                        <div class="service-img"
+                            style="background-image: url('https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&q=80&w=800');">
+                        </div>
+                        <div class="service-content">
+                            <span class="service-tag">Specialized Clinical</span>
+                            <h3>Renal & Cardiac Care</h3>
+                            <p style="color: var(--text-muted); font-size: 0.95rem;">Low sodium, potassium-monitored, and heart-healthy fats for chronic condition management.</p>
+                            <ul class="service-features" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #f0f0f0;">
+                                <li><i data-lucide="check" style="color: #334155;"></i> Sodium/Fluid Monitoring</li>
+                                <li><i data-lucide="check" style="color: #334155;"></i> Cholesterol Management</li>
+                                <li><i data-lucide="check" style="color: #334155;"></i> Blood Pressure Control</li>
+                            </ul>
+                            <a href="contact.html" class="service-cta" style="color: #334155; border-color: rgba(148,163,184,0.4); background: rgba(148,163,184,0.05);">Book Consultation &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    style="margin-top: 5rem; text-align: center; padding: 4rem; background: rgba(30, 61, 51, 0.03); border: 1px solid rgba(30, 61, 51, 0.1); border-radius: 40px;">
+                    <h2 style="font-size: 2.5rem;">Don't See Your Condition?</h2>
+                    <p style="margin: 1.5rem 0 2.5rem; color: var(--text-muted); font-size: 1.1rem;">We also specialize in sports nutrition, geriatric care, and pediatric wellness. Every body is unique, and so is our approach.</p>
+                    <a href="contact.html" class="cta-button" style="padding: 1rem 3rem;">Request a Custom Consultation</a>
+                </div>
+
+                <!-- FAQ Section (Same look as Plans) -->
+                <div style="margin-top: 8rem; text-align: center; border-top: 1px solid #eee; padding-top: 5rem;">
+                    <h2 style="font-size: 2.5rem; margin-bottom: 3rem;">Common Questions About Our Services</h2>
+                    <div style="max-width: 850px; margin: 0 auto; text-align: left; display: grid; gap: 1.5rem;">
+                        <details>
+                            <summary>
+                                How are these services different from regular gym diets? <i data-lucide="chevron-down" style="width: 18px;"></i>
+                            </summary>
+                            <p style="margin-top: 1rem; color: var(--text-muted); line-height: 1.8;">Unlike generic gym diets, our services are clinical and therapeutic. We analyze your blood reports, medical history, and specific conditions like PCOS or Diabetes to create a plan that heals, not just manages weight.</p>
+                        </details>
+                        <details>
+                            <summary>
+                                Do you provide recipes for South Indian meals? <i data-lucide="chevron-down" style="width: 18px;"></i>
+                            </summary>
+                            <p style="margin-top: 1rem; color: var(--text-muted); line-height: 1.8;">Absolutely! AharaX Wellness is rooted in traditional South Indian nutrition. We specialize in making healthy versions of dosas, idlis, and traditional grains like Ragi and Millets.</p>
+                        </details>
+                        <details>
+                            <summary>
+                                Can I switch between services mid-way? <i data-lucide="chevron-down" style="width: 18px;"></i>
+                            </summary>
+                            <p style="margin-top: 1rem; color: var(--text-muted); line-height: 1.8;">Yes. If your health goals evolve (e.g., from weight loss to pregnancy care), our dietitians will adjust your clinical approach and plan accordingly.</p>
+                        </details>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-info">
+                    <a href="#" class="footer-logo">AharaX Wellness</a>
+                    <p style="color: #a0aec0; margin-bottom: 1.5rem;">Personalized diet care for a healthier, happier you. Science-based and sustainable nutrition.</p>
+                    <div style="display: flex; gap: 1rem;">
+                        <a href="#"><i data-lucide="instagram"></i></a>
+                        <a href="#"><i data-lucide="facebook"></i></a>
+                        <a href="#"><i data-lucide="linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="plans.html">Diet Plans</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="blog.html">Resources</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                        <li><a href="#">FAQs</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li style="display: flex; gap: 0.5rem;"><i data-lucide="mail" style="width: 16px;"></i> consult.aharaxwellness@gmail.com</li>
+                        <li style="display: flex; gap: 0.5rem;"><i data-lucide="phone" style="width: 16px;"></i> +91 78069 77057</li>
+                        <li style="display: flex; gap: 0.5rem;"><i data-lucide="map-pin" style="width: 16px;"></i> Online Consultations</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 AharaX Wellness. All rights reserved.</p>
+                <p>Designed with <i data-lucide="heart" style="width: 12px; display: inline; color: #e53e3e;"></i> for wellness.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,1749 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard | AharaX Wellness</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Toast Notifications */
+        #toastContainer {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 9999;
+            display: grid;
+            gap: 10px;
+        }
+
+        .toast {
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: slideIn 0.3s ease forwards;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            min-width: 300px;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .toast.success { border-color: var(--neon-green); }
+        .toast.error { border-color: #ef4444; }
+
+        /* Modern UI Elements from Dietitian Dashboard */
+        .search-bar {
+            background: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            border: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            width: 350px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.03);
+            transition: all 0.3s ease;
+        }
+
+        .search-bar:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(30, 61, 51, 0.08);
+            width: 380px;
+        }
+
+        .search-bar input {
+            border: none;
+            outline: none;
+            font-size: 0.95rem;
+            width: 100%;
+            background: transparent;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: 1.2rem;
+            padding: 1.2rem;
+            border-radius: 18px;
+            transition: background 0.3s;
+            border-left: 3px solid transparent;
+        }
+
+        .activity-item:hover {
+            background: rgba(0,0,0,0.02);
+            border-left-color: var(--primary);
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+    </style>
+    <style>
+        .health-score-gauge {
+            width: 120px;
+            height: 120px;
+            position: relative;
+            margin: 0 auto 1.5rem;
+        }
+
+        .health-score-svg {
+            transform: rotate(-90deg);
+        }
+
+        .health-score-circle {
+            fill: none;
+            stroke-width: 8;
+            stroke-linecap: round;
+        }
+
+        .health-score-bg {
+            stroke: rgba(0,0,0,0.05);
+        }
+
+        .health-score-progress {
+            stroke: var(--neon-green);
+            stroke-dasharray: 251.2;
+            stroke-dashoffset: 62.8; /* 75% score */
+            transition: stroke-dashoffset 1s ease-out;
+            filter: drop-shadow(0 0 5px var(--neon-green));
+        }
+
+        .score-value {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .chart-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 28px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.03);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .chart-container:hover {
+            box-shadow: 0 20px 50px rgba(0,0,0,0.06);
+            transform: translateY(-5px);
+        }
+
+        .meal-item-interactive.completed p {
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+
+        .meal-item {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(5px);
+            padding: 1.2rem;
+            border-radius: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .meal-item:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateX(5px);
+        }
+
+        .liquid-tracker {
+            position: relative;
+            height: 12px;
+            background: #f1f5f9;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .liquid-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--clr-ocean), #60a5fa);
+            border-radius: 20px;
+            transition: width 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .liquid-progress::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shine 2s infinite;
+        }
+
+        @keyframes shine {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(100%); }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="toastContainer"></div>
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
+    <div class="bg-blob blob-3"></div>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-main">
+                <a href="index.html" class="logo">
+                    <i data-lucide="leaf"></i>
+                    AharaX
+                </a>
+                <nav class="dash-nav">
+                    <a href="#" class="dash-nav-link active" onclick="switchTab('overview', this)"><i data-lucide="layout-dashboard"></i> Overview</a>
+                    <a href="#" class="dash-nav-link" onclick="switchTab('plans', this)"><i data-lucide="clipboard-list"></i> My Diet Plans</a>
+                    <a href="#" class="dash-nav-link" onclick="switchTab('reports', this)"><i data-lucide="bar-chart-3"></i> Health Reports</a>
+                    <a href="#" class="dash-nav-link" onclick="switchTab('consultations', this)"><i data-lucide="calendar"></i> Consultations</a>
+                    <a href="#" class="dash-nav-link" onclick="switchTab('messages', this)"><i data-lucide="message-square"></i> Messages</a>
+                    <a href="#" class="dash-nav-link" onclick="switchTab('progress', this)"><i data-lucide="trending-up"></i> Progress</a>
+                    <a href="#" class="dash-nav-link" onclick="switchTab('rewards', this)"><i data-lucide="gift"></i> Rewards</a>
+                    <a href="#" class="dash-nav-link" onclick="switchTab('settings', this)"><i data-lucide="settings"></i> Settings</a>
+                </nav>
+            </div>
+            <a href="login.html" class="sign-out-minimal">
+                <i data-lucide="log-out"></i> 
+                Sign Out
+            </a>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <div class="dash-top-bar">
+                <div class="search-bar">
+                    <i data-lucide="search" style="width: 18px; color: var(--text-muted);"></i>
+                    <input type="text" id="globalSearchInput" onkeyup="globalSearch(this.value)" placeholder="Search your plans, reports or settings...">
+                </div>
+                <div style="display: flex; align-items: center; gap: 1.5rem;">
+                    <div style="position: relative; cursor: pointer;" onclick="toggleNotifications()">
+                        <div class="badge" style="background: white; width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+                            <i data-lucide="bell" style="width: 18px; color: var(--primary);"></i>
+                        </div>
+                        <div style="position: absolute; top: -5px; right: -5px; width: 18px; height: 18px; background: #ef4444; color: white; font-size: 0.65rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white;">2</div>
+                    </div>
+                    
+                    <div class="profile-small" style="display: flex; align-items: center; gap: 1rem; background: white; padding: 0.6rem 1.2rem; border-radius: 50px; border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+                        <div style="text-align: right;">
+                            <p style="font-size: 0.9rem; font-weight: 600;">Priya Sharma</p>
+                            <p style="font-size: 0.7rem; color: var(--text-muted);">Standard Plan</p>
+                        </div>
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100" alt="Profile" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);">
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <h1 id="tabTitle" style="font-size: 1.8rem; font-weight: 700;">Welcome back, Priya!</h1>
+            </div>
+
+            <!-- Notification Center (Hidden Overlay) -->
+            <div id="notificationCenter" style="position: fixed; top: 0; right: -400px; width: 380px; height: 100vh; background: white; z-index: 1000; box-shadow: -10px 0 30px rgba(0,0,0,0.1); transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h3>Notifications</h3>
+                    <button class="badge" onclick="toggleNotifications()" style="border: none; background: rgba(0,0,0,0.05); cursor: pointer;"><i data-lucide="x" style="width: 18px;"></i></button>
+                </div>
+                <div style="display: grid; gap: 1rem;" id="notificationList">
+                    <div class="activity-item" style="background: rgba(30, 61, 51, 0.05); border-radius: 16px;">
+                        <div class="activity-icon" style="background: var(--primary); color: white;"><i data-lucide="file-text"></i></div>
+                        <div>
+                            <p style="font-weight: 700; font-size: 0.85rem;">New Diet Plan Shared</p>
+                            <p style="font-size: 0.75rem; color: var(--text-muted);">Dr. Ananya Roy uploaded your "Phase 2" plan.</p>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background: var(--neon-blue); color: white;"><i data-lucide="message-square"></i></div>
+                        <div>
+                            <p style="font-weight: 700; font-size: 0.85rem;">New Message</p>
+                            <p style="font-size: 0.75rem; color: var(--text-muted);">"Don't forget to log your evening snack!"</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dynamic Content Tabs -->
+            <div id="overviewTab" class="tab-content active">
+                <div class="dashboard-grid">
+                    <div class="panel-main">
+                        <!-- Stats Summary -->
+                        <div class="stats-grid">
+                            <div class="stat-card glass-card neon-glow-gold">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                    <span class="stat-label">Health Score</span>
+                                    <div style="background: rgba(251, 191, 36, 0.1); padding: 0.5rem; border-radius: 12px;"><i data-lucide="shield-check" style="width: 16px; color: #fbbf24;"></i></div>
+                                </div>
+                                <div class="health-score-gauge">
+                                    <svg class="health-score-svg" viewBox="0 0 100 100">
+                                        <circle class="health-score-circle health-score-bg" cx="50" cy="50" r="40"></circle>
+                                        <circle class="health-score-circle health-score-progress" cx="50" cy="50" r="40" id="healthScoreCircle"></circle>
+                                    </svg>
+                                    <span class="score-value" id="healthScoreValue">85</span>
+                                </div>
+                                <div class="stat-meta" style="justify-content: center; color: var(--neon-green);">
+                                    <i data-lucide="trending-up" style="width: 14px;"></i> <span>Excellent Progress</span>
+                                </div>
+                            </div>
+                            <div class="stat-card glass-card neon-glow-blue">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                    <span class="stat-label">Hydration</span>
+                                    <div style="background: rgba(59, 130, 246, 0.1); padding: 0.5rem; border-radius: 12px;"><i data-lucide="droplet" style="width: 16px; color: var(--clr-ocean);"></i></div>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: baseline; margin: 1rem 0;">
+                                    <div class="stat-value" style="margin: 0;"><span id="waterCount">2.4</span> <span style="font-size: 0.9rem; color: var(--text-muted); font-weight: 400;">/ 3.0 L</span></div>
+                                    <button onclick="addWater()" class="pulse" style="background: var(--clr-ocean); color: white; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(61, 90, 128, 0.3); transition: all 0.2s;"><i data-lucide="plus" style="width: 18px;"></i></button>
+                                </div>
+                                <div class="liquid-tracker">
+                                    <div id="waterProgress" class="liquid-progress" style="width: 80%;"></div>
+                                </div>
+                                <p style="font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 1rem;">Goal: 3.0L daily</p>
+                            </div>
+                            <div class="stat-card glass-card neon-glow-green">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                    <span class="stat-label">Weight Journey</span>
+                                    <div style="background: rgba(166, 104, 87, 0.1); padding: 0.5rem; border-radius: 12px;"><i data-lucide="scale" style="width: 16px; color: var(--clr-terracotta);"></i></div>
+                                </div>
+                                <div class="stat-value">62.5 <span style="font-size: 0.9rem; color: var(--text-muted); font-weight: 400;">kg</span></div>
+                                <div style="flex: 1; display: flex; align-items: center; justify-content: center; margin: 1rem 0;">
+                                    <canvas id="weightMiniChart" style="max-height: 50px;"></canvas>
+                                </div>
+                                <div class="stat-meta stat-up" style="color: var(--neon-green);">
+                                    <i data-lucide="trending-down" style="width: 14px;"></i> <span>-1.2kg this month</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Progress Chart -->
+                        <div class="chart-container" style="height: 350px; display: flex; flex-direction: column;">
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                                <div>
+                                    <h3 style="font-size: 1.2rem;">Weight Evolution</h3>
+                                    <p style="font-size: 0.8rem; color: var(--text-muted);">Weekly progress tracking</p>
+                                </div>
+                                <div class="badge"
+                                    style="background: rgba(74, 222, 128, 0.1); color: #065f46; border: 1px solid rgba(74, 222, 128, 0.2);">
+                                    +2.4% Consistency</div>
+                            </div>
+                            <div style="flex: 1; min-height: 0;">
+                                <canvas id="weightChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Health Insights & Activity -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                            <div class="card"
+                                style="padding: 1.5rem; background: linear-gradient(135deg, #1e3d33 0%, #2d5a4b 100%); color: white; border: none;">
+                                <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1rem;">
+                                    <div
+                                        style="background: rgba(255,255,255,0.2); padding: 0.5rem; border-radius: 10px;">
+                                        <i data-lucide="lightbulb" style="width: 20px;"></i></div>
+                                    <h4 style="color: white;">Daily Health Tip</h4>
+                                </div>
+                                <p style="font-size: 0.9rem; opacity: 0.9; line-height: 1.4;">"Intermittent fasting can
+                                    improve metabolic health. Try a 14-hour fast tonight for better digestion."</p>
+                            </div>
+                            <div class="card" style="padding: 1.5rem; border: 1px solid rgba(0,0,0,0.05);">
+                                <h4 style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i data-lucide="activity" style="width: 18px; color: var(--primary);"></i>
+                                    Recent Activity
+                                </h4>
+                                <div id="personalActivityFeed" style="display: grid; gap: 0.8rem; max-height: 120px; overflow-y: auto;">
+                                    <!-- Dynamic Activity -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel-right">
+                        <!-- Upcoming Consultation -->
+                        <div class="card"
+                            style="padding: 1.5rem; background: #fff; margin-bottom: 1.5rem; border: 1px solid rgba(0,0,0,0.05);">
+                            <h4 style="margin-bottom: 1rem; font-size: 1rem;">Next Consultation</h4>
+                            <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1.2rem;">
+                                <img src="https://images.unsplash.com/photo-1559839734-2b71f1536783?auto=format&fit=crop&q=80&w=100"
+                                    id="consultationDocAvatar" style="width: 45px; height: 45px; border-radius: 12px; object-fit: cover;">
+                                <div>
+                                    <p style="font-weight: 600; font-size: 0.9rem;" id="consultationDocName">Dr. Ananya Roy</p>
+                                    <p style="font-size: 0.75rem; color: var(--text-muted);" id="consultationDocTitle">Follow-up Session</p>
+                                </div>
+                            </div>
+                            <div
+                                style="background: #f8fafc; padding: 0.8rem; border-radius: 12px; margin-bottom: 1.2rem;">
+                                <div
+                                    style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: var(--text-dark); font-weight: 500;">
+                                    <i data-lucide="calendar" style="width: 14px;"></i> Tomorrow, 10:30 AM
+                                </div>
+                            </div>
+                            <button class="cta-button"
+                                style="width: 100%; justify-content: center; font-size: 0.8rem;" onclick="joinVideo()">Join Video
+                                Call</button>
+                        </div>
+
+                        <!-- Today's Meal Plan -->
+                        <div class="diet-plan-card" style="box-shadow: 0 10px 30px rgba(30, 61, 51, 0.15);">
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                                <div>
+                                    <h3 style="font-size: 1.1rem;">Meal Plan</h3>
+                                    <p style="opacity: 0.8; font-size: 0.8rem;">Phase 2: Muscle Gain</p>
+                                </div>
+                                <i data-lucide="utensils" style="opacity: 0.3;"></i>
+                            </div>
+                            <div class="meal-list">
+                                <div class="meal-item">
+                                    <div>
+                                        <p style="font-weight: 600; font-size: 0.9rem;">Breakfast</p>
+                                        <p style="font-size: 0.75rem; opacity: 0.8;">Oats with Berries</p>
+                                    </div>
+                                    <i data-lucide="check-circle" style="width: 18px; color: #4ade80;"></i>
+                                </div>
+                                <div class="meal-item">
+                                    <div>
+                                        <p style="font-weight: 600; font-size: 0.9rem;">Lunch</p>
+                                        <p style="font-size: 0.75rem; opacity: 0.8;">Grilled Paneer Salad</p>
+                                    </div>
+                                    <i data-lucide="check-circle" style="width: 18px; color: #4ade80;"></i>
+                                </div>
+                                <div class="meal-item" id="snack-item"
+                                    style="border: 1px dashed rgba(255,255,255,0.3); background: transparent;">
+                                    <div>
+                                        <p style="font-weight: 600; font-size: 0.9rem;">Snack</p>
+                                        <p style="font-size: 0.75rem; opacity: 0.8;">Greek Yogurt</p>
+                                    </div>
+                                    <button class="badge" id="log-snack-btn"
+                                        style="background: white; border: none; cursor: pointer; padding: 0.2rem 0.5rem; font-size: 0.7rem;"
+                                        onclick="logMeal('snack')">Log</button>
+                                </div>
+                            </div>
+                            <button onclick="switchTab('plans', document.querySelector('a[onclick*=\'plans\']'))"
+                                class="cta-button"
+                                style="background: white; color: var(--primary); width: 100%; margin-top: 1.5rem; font-size: 0.8rem; justify-content: center;">Full
+                                Schedule</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Diet Plans Tab -->
+            <div id="plansTab" class="tab-content" style="display: none;">
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+                    <div class="panel-main">
+                        <div class="card" style="margin-bottom: 2rem; border: none; background: linear-gradient(135deg, var(--primary) 0%, #2d5a4b 100%); color: white; padding: 2.2rem; border-radius: 28px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h2 style="color: white; margin-bottom: 0.5rem; font-size: 1.5rem;">Weekly Schedule</h2>
+                                    <p style="opacity: 0.8; font-size: 0.9rem;">Phase 2: Lean Muscle Protocol</p>
+                                </div>
+                                <button class="cta-button outline" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); color: white;" onclick="downloadPDF()">
+                                    <i data-lucide="download"></i> Download PDF
+                                </button>
+                            </div>
+                        </div>
+                        <div id="weeklyPlanContainer" style="display: grid; gap: 1.5rem;">
+                            <!-- Dynamic Weekly Plan -->
+                        </div>
+                    </div>
+                    <div class="panel-right">
+                        <div class="card" style="padding: 1.5rem; margin-bottom: 1.5rem; border: 1px solid rgba(0,0,0,0.05);">
+                            <h4 style="margin-bottom: 1.2rem; font-size: 1rem;">Macro Balance</h4>
+                            <div style="display: grid; gap: 1.2rem;">
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 0.4rem;">
+                                        <span>Protein</span><span>140g / 180g</span>
+                                    </div>
+                                    <div style="height: 6px; background: rgba(0,0,0,0.05); border-radius: 3px; overflow: hidden;">
+                                        <div style="width: 75%; height: 100%; background: var(--primary);"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 0.4rem;">
+                                        <span>Carbs</span><span>180g / 220g</span>
+                                    </div>
+                                    <div style="height: 6px; background: rgba(0,0,0,0.05); border-radius: 3px; overflow: hidden;">
+                                        <div style="width: 80%; height: 100%; background: #fbbf24;"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 0.4rem;">
+                                        <span>Fats</span><span>55g / 65g</span>
+                                    </div>
+                                    <div style="height: 6px; background: rgba(0,0,0,0.05); border-radius: 3px; overflow: hidden;">
+                                        <div style="width: 85%; height: 100%; background: #ef4444;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card" style="padding: 1.5rem; background: #f0fdf4; border: 1px solid #bbf7d0;">
+                            <p style="font-weight: 700; font-size: 0.9rem; color: #166534; margin-bottom: 0.5rem;">Dietitian's Note</p>
+                            <p style="font-size: 0.8rem; color: #166534; opacity: 0.8;">Focus on high protein intake post-workout. Keep the hydration above 3L this week.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Health Reports Tab -->
+            <div id="reportsTab" class="tab-content" style="display: none;">
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 2rem;">
+                    <div class="card" style="padding: 1.5rem; text-align: center; border: 1px solid rgba(0,0,0,0.05);">
+                        <p style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; margin-bottom: 0.5rem;">BMI</p>
+                        <h3 style="font-size: 1.8rem; color: var(--primary);">23.1</h3>
+                        <p style="font-size: 0.7rem; color: #4ade80;">Optimal Range</p>
+                    </div>
+                    <div class="card" style="padding: 1.5rem; text-align: center; border: 1px solid rgba(0,0,0,0.05);">
+                        <p style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; margin-bottom: 0.5rem;">BODY FAT %</p>
+                        <h3 style="font-size: 1.8rem; color: var(--primary);">22.4%</h3>
+                        <p style="font-size: 0.7rem; color: #4ade80;">-0.8% drop</p>
+                    </div>
+                    <div class="card" style="padding: 1.5rem; text-align: center; border: 1px solid rgba(0,0,0,0.05);">
+                        <p style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; margin-bottom: 0.5rem;">MUSCLE MASS</p>
+                        <h3 style="font-size: 1.8rem; color: var(--primary);">48.2 kg</h3>
+                        <p style="font-size: 0.7rem; color: #4ade80;">+0.4 kg gain</p>
+                    </div>
+                    <div class="card" style="padding: 1.5rem; text-align: center; border: 1px solid rgba(0,0,0,0.05);">
+                        <p style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; margin-bottom: 0.5rem;">HEALTH SCORE</p>
+                        <h3 style="font-size: 1.8rem; color: #fbbf24;">85</h3>
+                        <p style="font-size: 0.7rem; color: var(--text-muted);">Top 10%</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <div>
+                            <h3 style="font-size: 1.2rem;">Medical Records & Reports</h3>
+                            <p style="font-size: 0.8rem; color: var(--text-muted);">Manage your health documents securely</p>
+                        </div>
+                        <button class="cta-button" style="font-size: 0.85rem;" onclick="document.getElementById('reportUpload').click()">
+                            <i data-lucide="upload-cloud" style="width: 18px;"></i> Upload Report
+                        </button>
+                        <input type="file" id="reportUpload" style="display: none;" onchange="handleFileUpload(event)">
+                    </div>
+                    <div id="reportsList" style="display: grid; gap: 1rem;">
+                        <!-- Reports will be loaded here dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Consultations Tab -->
+            <div id="consultationsTab" class="tab-content" style="display: none;">
+                <div style="display: grid; grid-template-columns: 1.8fr 1fr; gap: 2rem;">
+                    <div>
+                        <div class="card" style="margin-bottom: 2rem;">
+                            <h3 style="margin-bottom: 1.5rem;">Upcoming Session</h3>
+                            <div
+                                style="background: linear-gradient(135deg, var(--clr-forest) 0%, #1e3d33 100%); color: white; padding: 2rem; border-radius: 24px; display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div
+                                        style="background: rgba(255,255,255,0.2); padding: 0.4rem 0.8rem; border-radius: 50px; display: inline-block; font-size: 0.75rem; margin-bottom: 1rem;">
+                                        Video Consultation</div>
+                                    <h4 style="font-size: 1.5rem; color: white; margin-bottom: 0.5rem;">Follow-up with
+                                        Dr. Ananya</h4>
+                                    <p style="opacity: 0.9; font-size: 0.9rem;"><i data-lucide="calendar"
+                                            style="width: 14px; vertical-align: middle;"></i> Tomorrow, 10:30 AM (IST)
+                                    </p>
+                                </div>
+                                <button class="cta-button" style="background: white; color: var(--primary);"
+                                    onclick="joinVideo()">Join Now</button>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h3 style="margin-bottom: 1.5rem;">Recent Consultations</h3>
+                            <div style="display: grid; gap: 1rem;">
+                                <div
+                                    style="display: flex; justify-content: space-between; align-items: center; padding: 1.2rem; background: #f8fafc; border-radius: 15px; border: 1px solid rgba(0,0,0,0.03);">
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <div style="background: white; padding: 0.5rem; border-radius: 10px;"><i
+                                                data-lucide="video" style="width: 18px; color: var(--clr-forest);"></i>
+                                        </div>
+                                        <div>
+                                            <p style="font-weight: 600; font-size: 0.9rem;">Initial Consultation</p>
+                                            <p style="font-size: 0.75rem; color: var(--text-muted);">April 05, 2026 • 45
+                                                mins</p>
+                                        </div>
+                                    </div>
+                                    <button class="cta-button outline" style="padding: 0.4rem 1rem; font-size: 0.75rem;"
+                                        onclick="alert('Viewing session notes...')">View Notes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 style="margin-bottom: 1.5rem;">Schedule Session</h3>
+                        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem;">Choose a date for
+                            your next check-in with Dr. Roy.</p>
+                        <div
+                            style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; margin-bottom: 1.5rem;">
+                             <div
+                                 style="padding: 1rem; border: 1px solid var(--accent); border-radius: 12px; text-align: center; cursor: pointer; background: rgba(30, 61, 51, 0.05);" class="date-slot selected"
+                                 onclick="selectDate(this, 'May 08')">
+                                 <p style="font-size: 0.7rem; color: var(--text-muted);">MAY</p>
+                                 <p style="font-weight: 700;">08</p>
+                             </div>
+                             <div
+                                 style="padding: 1rem; border: 1px solid rgba(0,0,0,0.05); border-radius: 12px; text-align: center; cursor: pointer;"
+                                 class="date-slot"
+                                 onclick="selectDate(this, 'May 10')">
+                                 <p style="font-size: 0.7rem; color: var(--text-muted);">MAY</p>
+                                 <p style="font-weight: 700;">10</p>
+                             </div>
+                             <div
+                                 style="padding: 1rem; border: 1px solid rgba(0,0,0,0.05); border-radius: 12px; text-align: center; cursor: pointer;"
+                                 class="date-slot"
+                                 onclick="selectDate(this, 'May 12')">
+                                 <p style="font-size: 0.7rem; color: var(--text-muted);">MAY</p>
+                                 <p style="font-weight: 700;">12</p>
+                             </div>
+                        </div>
+                        <button class="cta-button" style="width: 100%; justify-content: center;"
+                            id="confirmBtn"
+                            onclick="confirmBooking()">Confirm Booking for <span id="selectedDate">May 08</span></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages Tab -->
+            <div id="messagesTab" class="tab-content" style="display: none;">
+                <div class="card"
+                    style="height: 600px; display: flex; flex-direction: column; padding: 0; overflow: hidden; border: 1px solid rgba(0,0,0,0.05);">
+                    <div
+                        style="padding: 1.2rem 2rem; border-bottom: 1px solid rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: space-between; background: #fff;">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div style="position: relative;">
+                                <img src="https://images.unsplash.com/photo-1559839734-2b71f1536783?auto=format&fit=crop&q=80&w=100"
+                                    id="chatDocAvatar" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover;">
+                                <div
+                                    style="position: absolute; bottom: 2px; right: 2px; width: 12px; height: 12px; background: #4ade80; border: 2px solid white; border-radius: 50%;">
+                                </div>
+                            </div>
+                            <div>
+                                <p style="font-weight: 700; color: var(--text-dark);" id="chatDocName">Dr. Ananya Roy</p>
+                                <p style="font-size: 0.75rem; color: #4ade80; font-weight: 500;">Active Now</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 1rem; color: var(--text-muted);">
+                            <i data-lucide="phone" style="width: 18px; cursor: pointer;"></i>
+                            <i data-lucide="video" style="width: 18px; cursor: pointer;"></i>
+                            <i data-lucide="more-vertical" style="width: 18px; cursor: pointer;"></i>
+                        </div>
+                    </div>
+                    <div id="chat-container"
+                        style="flex: 1; padding: 2rem; overflow-y: auto; background: #fdfdfd; display: flex; flex-direction: column; gap: 1.5rem;">
+                        <!-- Messages will be loaded here -->
+                    </div>
+                    <div style="padding: 1.5rem 2rem; border-top: 1px solid rgba(0,0,0,0.05); background: white;">
+                        <div
+                            style="display: flex; gap: 1rem; background: #f8fafc; padding: 0.5rem; border-radius: 50px; border: 1px solid rgba(0,0,0,0.05);">
+                            <button
+                                style="background: none; border: none; padding: 0.5rem; color: var(--text-muted); cursor: pointer;"><i
+                                    data-lucide="plus-circle"></i></button>
+                            <input type="text" placeholder="Message Dr. Ananya..." id="chat-input"
+                                style="flex: 1; border: none; background: transparent; padding: 0.8rem; outline: none; font-size: 0.9rem;"
+                                onkeypress="if(event.key === 'Enter') sendMessage()">
+                            <button class="cta-button" style="padding: 0.8rem 1.5rem; border-radius: 50px;"
+                                onclick="sendMessage()">
+                                <i data-lucide="send" style="width: 18px;"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Tab -->
+            <div id="progressTab" class="tab-content" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <div>
+                        <h3 style="font-size: 1.5rem; margin-bottom: 0.2rem; color: #1e293b;">Health Progression & Analytics</h3>
+                        <p style="color: #64748b; font-size: 0.9rem;">Track your body composition & performance metrics over time.</p>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; background: rgba(0,0,0,0.04); padding: 5px; border-radius: 12px;">
+                        <button class="timeframe-btn active" onclick="updateProgressTimeframe('1m', this)">1 Month</button>
+                        <button class="timeframe-btn" onclick="updateProgressTimeframe('3m', this)">3 Months</button>
+                        <button class="timeframe-btn" onclick="updateProgressTimeframe('6m', this)">6 Months</button>
+                    </div>
+                </div>
+
+                <div class="stats-grid" style="margin-bottom: 2rem;">
+                    <div class="stat-card" style="background: white; border: 1px solid rgba(0,0,0,0.06); padding: 1.5rem; border-radius: 20px;">
+                        <span style="font-size: 0.8rem; color: #64748b; font-weight: 600; text-transform: uppercase;">Current Weight</span>
+                        <h2 style="font-size: 2rem; margin: 0.5rem 0; color: #1e293b;" id="progressWeightVal">64.1 kg</h2>
+                        <div style="display: flex; align-items: center; gap: 0.5rem; color: #16a34a; font-size: 0.85rem; font-weight: 600;">
+                            <i data-lucide="trending-down" style="width: 16px;"></i> <span id="progressWeightChange">-1.1 kg total</span>
+                        </div>
+                    </div>
+                    <div class="stat-card" style="background: white; border: 1px solid rgba(0,0,0,0.06); padding: 1.5rem; border-radius: 20px;">
+                        <span style="font-size: 0.8rem; color: #64748b; font-weight: 600; text-transform: uppercase;">Body Fat %</span>
+                        <h2 style="font-size: 2rem; margin: 0.5rem 0; color: #1e293b;" id="progressFatVal">26.5%</h2>
+                        <div style="display: flex; align-items: center; gap: 0.5rem; color: #16a34a; font-size: 0.85rem; font-weight: 600;">
+                            <i data-lucide="trending-down" style="width: 16px;"></i> <span id="progressFatChange">-0.8% total</span>
+                        </div>
+                    </div>
+                    <div class="stat-card" style="background: white; border: 1px solid rgba(0,0,0,0.06); padding: 1.5rem; border-radius: 20px;">
+                        <span style="font-size: 0.8rem; color: #64748b; font-weight: 600; text-transform: uppercase;">Muscle Mass</span>
+                        <h2 style="font-size: 2rem; margin: 0.5rem 0; color: #1e293b;" id="progressMuscleVal">42.8 kg</h2>
+                        <div style="display: flex; align-items: center; gap: 0.5rem; color: #16a34a; font-size: 0.85rem; font-weight: 600;">
+                            <i data-lucide="trending-up" style="width: 16px;"></i> <span id="progressMuscleChange">+0.4 kg total</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-container" style="padding: 2rem; background: white; border-radius: 28px; border: 1px solid rgba(0,0,0,0.05); margin-bottom: 2rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h4 style="font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem; color: #1e293b;">
+                            <div style="width: 12px; height: 12px; background: var(--primary); border-radius: 3px;"></div>
+                            Body Composition Analysis
+                        </h4>
+                        <button class="cta-button outline" style="padding: 0.5rem 1rem; font-size: 0.75rem;" onclick="showToast('Exporting Progress Data...')"><i data-lucide="download" style="width: 14px; margin-right: 5px;"></i> Export Data</button>
+                    </div>
+                    <div style="height: 350px; width: 100%;">
+                        <canvas id="detailedProgressChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rewards Tab -->
+            <div id="rewardsTab" class="tab-content" style="display: none;">
+                <!-- Rewards Overview -->
+                <div class="stats-grid" style="margin-bottom: 2rem;">
+                    <div class="stat-card glass-card neon-glow-gold">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <span class="stat-label">Total Rewards</span>
+                            <div style="background: rgba(251, 191, 36, 0.1); padding: 0.5rem; border-radius: 12px;"><i data-lucide="award" style="width: 16px; color: #fbbf24;"></i></div>
+                        </div>
+                        <h2 class="stat-value">3</h2>
+                        <div class="stat-meta" style="color: var(--text-muted);">
+                            <span>Earned this month</span>
+                        </div>
+                    </div>
+                    <div class="stat-card glass-card neon-glow-green">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <span class="stat-label">Active Coupons</span>
+                            <div style="background: rgba(74, 222, 128, 0.1); padding: 0.5rem; border-radius: 12px;"><i data-lucide="ticket" style="width: 16px; color: #4ade80;"></i></div>
+                        </div>
+                        <h2 class="stat-value">1</h2>
+                        <div class="stat-meta" style="color: var(--neon-green);">
+                            <i data-lucide="check-circle" style="width: 14px;"></i> <span>Ready to use</span>
+                        </div>
+                    </div>
+                    <div class="stat-card glass-card neon-glow-blue">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <span class="stat-label">Extra Minutes</span>
+                            <div style="background: rgba(59, 130, 246, 0.1); padding: 0.5rem; border-radius: 12px;"><i data-lucide="clock" style="width: 16px; color: #3b82f6;"></i></div>
+                        </div>
+                        <h2 class="stat-value">20<span style="font-size: 1rem; color: var(--text-muted); font-weight: 400;">m</span></h2>
+                        <div class="stat-meta" style="color: var(--text-muted);">
+                            <span>Consultation bonus</span>
+                        </div>
+                    </div>
+                    <div class="stat-card glass-card">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <span class="stat-label">Referrals</span>
+                            <div style="background: rgba(166, 104, 87, 0.1); padding: 0.5rem; border-radius: 12px;"><i data-lucide="users" style="width: 16px; color: var(--clr-terracotta);"></i></div>
+                        </div>
+                        <h2 class="stat-value">2</h2>
+                        <div class="stat-meta" style="color: var(--neon-green);">
+                            <i data-lucide="trending-up" style="width: 14px;"></i> <span>+1 this week</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+                    <div class="panel-main">
+                        <!-- Free Sample Menu -->
+                        <div class="card" style="margin-bottom: 2rem; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 1px solid #bbf7d0; display: flex; align-items: center; justify-content: space-between; transition: transform 0.3s ease, box-shadow 0.3s ease;">
+                            <div>
+                                <span class="badge" style="background: #166534; color: white; margin-bottom: 1rem; display: inline-block;">New User Reward</span>
+                                <h3 style="color: #166534; margin-bottom: 0.5rem; font-size: 1.4rem;">Free 1-Day Diet Sample</h3>
+                                <p style="color: #15803d; font-size: 0.95rem; margin-bottom: 1.5rem; max-width: 400px;">Unlock a professionally designed one-day meal plan tailored for healthy living.</p>
+                                <button class="cta-button" style="background: #166534; color: white; display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 15px rgba(22, 101, 52, 0.2);" onclick="claimReward(this, 'sample')">
+                                    <i data-lucide="unlock" style="width: 16px;"></i> Claim Free Menu
+                                </button>
+                            </div>
+                            <div style="background: white; width: 100px; height: 100px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(22, 101, 52, 0.1);">
+                                <i data-lucide="salad" style="width: 48px; height: 48px; color: #166534;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Referral Reward -->
+                        <div class="card" style="margin-bottom: 2rem;">
+                            <h3 style="margin-bottom: 1rem; font-size: 1.2rem;">Invite Friends, Earn Minutes</h3>
+                            <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">Earn 10 extra consultation minutes for every friend who joins AharaX. Unlock VIP support at 10 referrals!</p>
+                            
+                            <div style="background: #f8fafc; padding: 1.5rem; border-radius: 16px; border: 1px solid rgba(0,0,0,0.05); margin-bottom: 1.5rem;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span style="font-weight: 600; font-size: 0.9rem;">Milestone Progress</span>
+                                    <span style="font-weight: 600; font-size: 0.9rem; color: var(--primary);">2/5 Referrals</span>
+                                </div>
+                                <div style="height: 10px; background: rgba(0,0,0,0.05); border-radius: 5px; overflow: hidden; margin-bottom: 1rem;">
+                                    <div style="width: 40%; height: 100%; background: linear-gradient(90deg, var(--primary), #4ade80); border-radius: 5px; transition: width 1s ease-in-out;"></div>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted);">
+                                    <span>Next Reward: +1 Premium Consultation</span>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; gap: 1rem; align-items: center;">
+                                <div style="flex: 1; display: flex; align-items: center; background: rgba(0,0,0,0.03); padding: 0.8rem 1.2rem; border-radius: 12px; border: 1px dashed rgba(0,0,0,0.1);">
+                                    <span style="font-family: monospace; font-size: 1.1rem; font-weight: 600; color: var(--primary); letter-spacing: 2px;">PRIYA2026</span>
+                                </div>
+                                <button class="cta-button" style="display: flex; align-items: center; gap: 0.5rem;" onclick="copyReferralCode()">
+                                    <i data-lucide="copy" style="width: 16px;"></i> Copy Link
+                                </button>
+                                <button class="cta-button outline" style="padding: 0.8rem; border-radius: 12px;" onclick="showToast('Share options opened', 'info')">
+                                    <i data-lucide="share-2" style="width: 18px;"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel-right">
+                        <!-- Monthly Subscription Discount Coupon -->
+                        <div class="card" style="margin-bottom: 2rem; border: 1px solid rgba(0,0,0,0.05); position: relative; overflow: hidden;">
+                            <div style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: rgba(251, 191, 36, 0.1); border-radius: 50%;"></div>
+                            <h4 style="margin-bottom: 1rem; font-size: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <i data-lucide="tag" style="width: 18px; color: var(--primary);"></i> Subscriptions
+                            </h4>
+                            <div style="background: white; border: 2px dashed #fbbf24; padding: 1.5rem; border-radius: 16px; text-align: center; margin-bottom: 1rem; transition: transform 0.3s ease;">
+                                <h2 style="font-size: 2.5rem; color: #fbbf24; line-height: 1; margin-bottom: 0.5rem;">20%<span style="font-size: 1rem;"> OFF</span></h2>
+                                <p style="font-size: 0.8rem; font-weight: 600; color: var(--text-dark);">Monthly Plan Upgrade</p>
+                                <p style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.5rem;">Code: <span style="font-weight: 700;">UPGRADE20</span></p>
+                            </div>
+                            <p style="font-size: 0.8rem; color: var(--text-muted); text-align: center; margin-bottom: 1rem;">Save more with monthly nutrition plans.</p>
+                            <button class="cta-button" style="width: 100%; justify-content: center;" onclick="applyCoupon(this)">Apply Coupon</button>
+                        </div>
+
+                        <!-- Reward Activity Timeline -->
+                        <div class="card">
+                            <h4 style="margin-bottom: 1.5rem; font-size: 1rem;">Reward History</h4>
+                            <div style="display: grid; gap: 1.2rem; position: relative;">
+                                <div style="position: absolute; left: 15px; top: 10px; bottom: 10px; width: 2px; background: rgba(0,0,0,0.05);"></div>
+                                
+                                <div style="display: flex; gap: 1rem; position: relative; z-index: 1;">
+                                    <div style="width: 32px; height: 32px; background: #dcfce7; color: #166534; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 0 4px white;">
+                                        <i data-lucide="check" style="width: 14px;"></i>
+                                    </div>
+                                    <div>
+                                        <p style="font-weight: 600; font-size: 0.85rem;">Referral Joined</p>
+                                        <p style="font-size: 0.75rem; color: var(--text-muted);">Rahul S. signed up • +10 mins</p>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 1rem; position: relative; z-index: 1;">
+                                    <div style="width: 32px; height: 32px; background: #fef08a; color: #854d0e; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 0 4px white;">
+                                        <i data-lucide="star" style="width: 14px;"></i>
+                                    </div>
+                                    <div>
+                                        <p style="font-weight: 600; font-size: 0.85rem;">Milestone Reached</p>
+                                        <p style="font-size: 0.75rem; color: var(--text-muted);">1st Referral completed</p>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 1rem; position: relative; z-index: 1;">
+                                    <div style="width: 32px; height: 32px; background: #dbeafe; color: #1e40af; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 0 4px white;">
+                                        <i data-lucide="gift" style="width: 14px;"></i>
+                                    </div>
+                                    <div>
+                                        <p style="font-weight: 600; font-size: 0.85rem;">Account Created</p>
+                                        <p style="font-size: 0.75rem; color: var(--text-muted);">Welcome to AharaX!</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settingsTab" class="tab-content" style="display: none;">
+                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem;">
+                    <!-- Settings Sidebar -->
+                    <div class="card" style="padding: 1.5rem; height: fit-content;">
+                        <div style="text-align: center; margin-bottom: 2rem;">
+                            <div style="position: relative; width: 100px; height: 100px; margin: 0 auto 1rem;">
+                                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200"
+                                    style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent);">
+                                <button
+                                    style="position: absolute; bottom: 0; right: 0; background: var(--primary); color: white; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;"><i
+                                        data-lucide="camera" style="width: 14px;"></i></button>
+                            </div>
+                            <h4 style="margin-bottom: 0.2rem;">Priya Sharma</h4>
+                            <p style="font-size: 0.8rem; color: var(--text-muted);">Member since April 2026</p>
+                        </div>
+                        <nav style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            <a href="#" class="dash-nav-link active" id="snav-personal"
+                                style="background: rgba(0,0,0,0.03); color: var(--text-dark); box-shadow: none;"
+                                onclick="switchSettingsSection('personal', this)">Personal Info</a>
+                            <a href="#" class="dash-nav-link" id="snav-notifications"
+                                onclick="switchSettingsSection('notifications', this)">Notifications</a>
+                            <a href="#" class="dash-nav-link" id="snav-video"
+                                onclick="switchSettingsSection('video', this)">Video Consultations</a>
+                            <a href="#" class="dash-nav-link" id="snav-security"
+                                onclick="switchSettingsSection('security', this)">Privacy &amp; Security</a>
+                            <a href="#" class="dash-nav-link" id="snav-subscription"
+                                onclick="switchSettingsSection('subscription', this)">Subscription</a>
+                        </nav>
+                    </div>
+
+                    <!-- Settings Forms -->
+                    <div class="card">
+                        <!-- Settings Content Sections -->
+                        <div id="personal-info-settings" class="settings-section">
+                            <h3 style="margin-bottom: 1.5rem;">Personal Information</h3>
+                            <div
+                                style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                                <div>
+                                    <label
+                                        style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem;">Full
+                                        Name</label>
+                                    <input type="text" value="Priya Sharma"
+                                        style="width: 100%; padding: 0.8rem; border-radius: 12px; border: 1px solid rgba(0,0,0,0.1);">
+                                </div>
+                                <div>
+                                    <label
+                                        style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem;">Email
+                                        Address</label>
+                                    <input type="email" value="priya@example.com"
+                                        style="width: 100%; padding: 0.8rem; border-radius: 12px; border: 1px solid rgba(0,0,0,0.1);">
+                                </div>
+                                <div>
+                                    <label
+                                        style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem;">Phone
+                                        Number</label>
+                                    <input type="text" value="+91 98765 43210"
+                                        style="width: 100%; padding: 0.8rem; border-radius: 12px; border: 1px solid rgba(0,0,0,0.1);">
+                                </div>
+                                <div>
+                                    <label
+                                        style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem;">Location</label>
+                                    <input type="text" value="Mumbai, India"
+                                        style="width: 100%; padding: 0.8rem; border-radius: 12px; border: 1px solid rgba(0,0,0,0.1);">
+                                </div>
+                            </div>
+
+                            <h3
+                                style="margin-bottom: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(0,0,0,0.05);">
+                                Video Call Preferences</h3>
+                            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">Choose your
+                                preferred platform for consultations.</p>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
+                                <label style="cursor: pointer;">
+                                    <input type="radio" name="video_pref" value="gmeet" checked style="display: none;">
+                                    <div class="video-pref-card">
+                                        <div
+                                            style="width: 40px; height: 40px; background: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                            <img src="https://www.gstatic.com/meet/google_meet_primary_horizontal_2020q4_logo_be3f01fef6e5539201ef3662193359d3.svg"
+                                                style="width: 24px;">
+                                        </div>
+                                        <div>
+                                            <p style="font-weight: 600; font-size: 0.9rem;">Google Meet</p>
+                                            <p style="font-size: 0.7rem; color: var(--text-muted);">Seamless integration
+                                            </p>
+                                        </div>
+                                    </div>
+                                </label>
+                                <label style="cursor: pointer;">
+                                    <input type="radio" name="video_pref" value="zoom" style="display: none;">
+                                    <div class="video-pref-card">
+                                        <div
+                                            style="width: 40px; height: 40px; background: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                            <img src="https://st3.zoom.us/static/6.3.26574/image/new/ZoomLogo.png"
+                                                style="width: 30px;">
+                                        </div>
+                                        <div>
+                                            <p style="font-weight: 600; font-size: 0.9rem;">Zoom</p>
+                                            <p style="font-size: 0.7rem; color: var(--text-muted);">HD video quality</p>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <h3
+                                style="margin-bottom: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(0,0,0,0.05);">
+                                Notification Settings</h3>
+                            <div style="display: grid; gap: 1rem; margin-bottom: 2rem;">
+                                <div
+                                    style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: #f8fafc; border-radius: 12px;">
+                                    <div>
+                                        <p style="font-weight: 600; font-size: 0.9rem;">WhatsApp Notifications</p>
+                                        <p style="font-size: 0.75rem; color: var(--text-muted);">Receive daily reminders
+                                            & meal logs</p>
+                                    </div>
+                                    <div
+                                        style="width: 40px; height: 20px; background: var(--primary); border-radius: 20px; position: relative; cursor: pointer;">
+                                        <div
+                                            style="width: 16px; height: 16px; background: white; border-radius: 50%; position: absolute; right: 2px; top: 2px;">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div
+                                    style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: #f8fafc; border-radius: 12px;">
+                                    <div>
+                                        <p style="font-weight: 600; font-size: 0.9rem;">Email Updates</p>
+                                        <p style="font-size: 0.75rem; color: var(--text-muted);">Weekly progress reports
+                                        </p>
+                                    </div>
+                                    <div
+                                        style="width: 40px; height: 20px; background: #ddd; border-radius: 20px; position: relative; cursor: pointer;">
+                                        <div
+                                            style="width: 16px; height: 16px; background: white; border-radius: 50%; position: absolute; left: 2px; top: 2px;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="cta-button" style="width: 100%; justify-content: center;"
+                                onclick="saveSettings()">Save All Changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // 🛡️ Centralized Customer App State
+        const CustomerState = {
+            profile: { 
+                name: 'Priya Sharma', 
+                plan: 'Standard Plan', 
+                goals: 'PCOS & Weight Loss',
+                memberSince: 'April 2026'
+            },
+            healthScore: 85,
+            waterGoal: 3.0,
+            waterCurrent: 2.4,
+            weightHistory: [65.2, 64.8, 65.0, 64.5, 64.2, 64.4, 64.1],
+            dailyMeals: [
+                { id: 'm1', type: 'Breakfast', name: 'Oats with Berries', cal: 350, completed: true },
+                { id: 'm2', type: 'Lunch', name: 'Grilled Paneer Salad', cal: 450, completed: true },
+                { id: 'm3', type: 'Snack', name: 'Handful of Almonds', cal: 150, completed: false },
+                { id: 'm4', type: 'Dinner', name: 'Brown Rice & Dal', cal: 500, completed: false }
+            ],
+            tips: [
+                "Intermittent fasting can improve metabolic health. Try a 14-hour fast tonight for better digestion.",
+                "Hydration is key for muscle recovery and metabolic balance.",
+                "Avoid processed sugars for better energy consistency throughout the day.",
+                "Fiber-rich foods stabilize blood sugar spikes effectively."
+            ]
+        };
+
+        // Global Chart Instance Handles
+        let weightChartInstance = null;
+        let miniWeightChartInstance = null;
+        let detailedProgressChartInstance = null;
+
+        // 🔔 Toast Notification System
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <i data-lucide="${type === 'success' ? 'check-circle' : (type === 'error' ? 'alert-circle' : 'info')}" style="width: 18px;"></i>
+                <span>${message}</span>
+            `;
+            container.appendChild(toast);
+            lucide.createIcons();
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(10px)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // 📑 Tab Navigation & Visibility System
+        function switchTab(tab, element) {
+            document.querySelectorAll('.tab-content').forEach(t => {
+                t.style.display = 'none';
+                t.classList.remove('active');
+            });
+
+            const target = document.getElementById(tab + 'Tab');
+            if (target) {
+                target.style.display = 'block';
+                setTimeout(() => target.classList.add('active'), 10);
+            }
+
+            document.querySelectorAll('.dash-nav-link').forEach(l => l.classList.remove('active'));
+            if (element) {
+                element.classList.add('active');
+            } else {
+                const navLink = document.querySelector(`.dash-nav-link[onclick*="'${tab}'"]`);
+                if (navLink) navLink.classList.add('active');
+            }
+
+            const titles = {
+                overview: 'Dashboard Overview',
+                plans: 'My Diet Plans',
+                reports: 'Health Reports',
+                consultations: 'Book Consultations',
+                messages: 'Messages with Dietitian',
+                progress: 'Health Progression & Analytics',
+                rewards: 'Rewards & Referrals',
+                settings: 'Account Settings'
+            };
+            const titleEl = document.getElementById('tabTitle');
+            if (titleEl) titleEl.innerText = titles[tab] || 'Welcome back, Priya!';
+
+            // Re-render and resize Chart.js components on tab switch
+            if (tab === 'overview') {
+                setTimeout(() => {
+                    if (weightChartInstance) {
+                        weightChartInstance.resize();
+                        weightChartInstance.update();
+                    }
+                    if (miniWeightChartInstance) {
+                        miniWeightChartInstance.resize();
+                        miniWeightChartInstance.update();
+                    }
+                }, 50);
+            } else if (tab === 'progress') {
+                setTimeout(() => {
+                    if (detailedProgressChartInstance) {
+                        detailedProgressChartInstance.resize();
+                        detailedProgressChartInstance.update();
+                    }
+                }, 50);
+            }
+
+            // Tab-specific data loaders
+            if (tab === 'reports') loadReports();
+            if (tab === 'messages') loadMessages();
+            if (tab === 'plans') loadPlans();
+            if (tab === 'consultations') loadConsultations();
+
+            lucide.createIcons();
+        }
+
+        // 💧 Overview & Hydration Tracking
+        function addWater() {
+            if (CustomerState.waterCurrent < CustomerState.waterGoal) {
+                CustomerState.waterCurrent = parseFloat((CustomerState.waterCurrent + 0.2).toFixed(1));
+                updateOverviewStats();
+                showToast('💧 Hydration tracked (+0.2L)!', 'success');
+                addActivityLog('You', 'Logged 0.2L water intake', 'droplet', 'var(--clr-ocean)');
+
+                // 2-Way Sync with Dietitian Dashboard
+                syncStatsToDietitian();
+            } else {
+                showToast('🎉 Daily hydration goal achieved (3.0L)!', 'success');
+            }
+        }
+
+        function updateOverviewStats() {
+            const countEl = document.getElementById('waterCount');
+            const progressEl = document.getElementById('waterProgress');
+            if (countEl && progressEl) {
+                countEl.innerText = CustomerState.waterCurrent.toFixed(1);
+                const pct = (CustomerState.waterCurrent / CustomerState.waterGoal) * 100;
+                progressEl.style.width = Math.min(pct, 100) + '%';
+            }
+
+            const scoreEl = document.getElementById('healthScoreValue');
+            const circleEl = document.getElementById('healthScoreCircle');
+            if (scoreEl && circleEl) {
+                scoreEl.innerText = CustomerState.healthScore;
+                circleEl.style.strokeDashoffset = 251.2 - (251.2 * CustomerState.healthScore / 100);
+            }
+        }
+
+        // 🥗 Meal Logging System
+        function logMeal(type) {
+            const btn = document.getElementById('log-' + type + '-btn');
+            const item = document.getElementById(type + '-item');
+            if (btn) {
+                btn.innerHTML = '<i data-lucide="check" style="width:14px;"></i> Done';
+                btn.style.background = '#4ade80';
+                btn.style.color = 'white';
+            }
+            if (item) {
+                item.style.borderColor = '#4ade80';
+            }
+            showToast(`✅ ${type.charAt(0).toUpperCase() + type.slice(1)} logged successfully!`, 'success');
+            addActivityLog('You', `Logged ${type} meal`, 'utensils', 'var(--primary)');
+            syncStatsToDietitian();
+            lucide.createIcons();
+        }
+
+        function loadDailyMeals() {
+            const container = document.getElementById('dailyMealList');
+            if (!container) return;
+
+            container.innerHTML = CustomerState.dailyMeals.map(m => `
+                <div class="meal-item-interactive ${m.completed ? 'completed' : ''}" onclick="toggleMeal('${m.id}')">
+                    <div>
+                        <p style="font-weight: 600; font-size: 0.85rem; color: #1e293b;">${m.type}</p>
+                        <p style="font-size: 0.7rem; color: #64748b;">${m.name} • ${m.cal} kcal</p>
+                    </div>
+                    <i data-lucide="${m.completed ? 'check-circle' : 'circle'}" style="width: 18px; color: ${m.completed ? '#4ade80' : '#94a3b8'};"></i>
+                </div>
+            `).join('');
+
+            updateNutritionProgress();
+            lucide.createIcons();
+        }
+
+        function toggleMeal(id) {
+            const meal = CustomerState.dailyMeals.find(m => m.id === id);
+            if (meal) {
+                meal.completed = !meal.completed;
+                loadDailyMeals();
+                if (meal.completed) {
+                    showToast(`✅ ${meal.type} logged!`, 'success');
+                    addActivityLog('You', `Logged ${meal.type} (${meal.name})`, 'utensils', 'var(--primary)');
+                    syncStatsToDietitian();
+                }
+            }
+        }
+
+        function updateNutritionProgress() {
+            const total = CustomerState.dailyMeals.reduce((sum, m) => sum + m.cal, 0);
+            const completed = CustomerState.dailyMeals.filter(m => m.completed).reduce((sum, m) => sum + m.cal, 0);
+            const percentage = Math.round((completed / total) * 100);
+
+            const ring = document.getElementById('calorieProgressRing');
+            const label = document.getElementById('caloriePercentage');
+            if (ring && label) {
+                const offset = 282.7 - (282.7 * percentage / 100);
+                ring.style.strokeDashoffset = offset;
+                label.innerText = percentage + '%';
+            }
+        }
+
+        // 📝 Dynamic Activity Logger
+        function addActivityLog(user, action, icon, color) {
+            const feed = document.getElementById('personalActivityFeed');
+            if (!feed) return;
+            const item = document.createElement('div');
+            item.style = "display: flex; gap: 0.8rem; align-items: center; padding: 0.5rem 0; animation: fadeIn 0.3s ease;";
+            item.innerHTML = `
+                <div style="width: 28px; height: 28px; border-radius: 8px; background: ${color}15; color: ${color}; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <i data-lucide="${icon}" style="width: 14px;"></i>
+                </div>
+                <div style="flex: 1;">
+                    <p style="font-size: 0.8rem; font-weight: 600; color: #1e293b;">${action}</p>
+                    <p style="font-size: 0.65rem; color: #64748b;">Just now</p>
+                </div>
+            `;
+            feed.prepend(item);
+            lucide.createIcons();
+
+            // Store for Dietitian Activity Feed sync
+            const acts = JSON.parse(localStorage.getItem('aharax_customer_activity')) || [];
+            acts.unshift({ user: 'Priya Sharma', action: action, time: 'Just now', icon: icon, color: color });
+            localStorage.setItem('aharax_customer_activity', JSON.stringify(acts.slice(0, 15)));
+        }
+
+        function syncStatsToDietitian() {
+            const stats = {
+                name: 'Priya Sharma',
+                water: `${CustomerState.waterCurrent.toFixed(1)}L`,
+                weight: '62.5kg',
+                score: CustomerState.healthScore,
+                updatedAt: new Date().toISOString()
+            };
+            localStorage.setItem('aharax_client_stats', JSON.stringify(stats));
+        }
+
+        // 🥗 Diet Plans Sync & Render
+        function loadPlans() {
+            const container = document.getElementById('weeklyPlanContainer');
+            if (!container) return;
+
+            const customPlans = JSON.parse(localStorage.getItem('aharax_plans')) || [];
+            const defaultDays = [
+                { day: 'Monday', meals: { breakfast: 'Oats with Almonds', lunch: 'Grilled Chicken Breast / Paneer', dinner: 'Quinoa & Stir-fry Veg' }, status: 'Active' },
+                { day: 'Tuesday', meals: { breakfast: 'Greek Yogurt & Flaxseeds', lunch: 'Tofu & Vegetable Stir Fry', dinner: 'Lentil & Spinach Soup' }, status: 'Active' },
+                { day: 'Wednesday', meals: { breakfast: 'Egg White / Avocado Toast', lunch: 'Grilled Fish / Paneer Tacos', dinner: 'Sweet Potato & Chickpea Bowl' }, status: 'Upcoming' },
+                { day: 'Thursday', meals: { breakfast: 'Protein Smoothie Bowl', lunch: 'Chickpea & Quinoa Salad', dinner: 'Grilled Veggies & Multigrain Roti' }, status: 'Upcoming' },
+                { day: 'Friday', meals: { breakfast: 'Oat Pancakes with Honey', lunch: 'Whole Wheat Veg Wrap', dinner: 'Mixed Vegetable Curry' }, status: 'Upcoming' }
+            ];
+
+            let html = '';
+
+            // If Dietitian has sent custom plans, display them at the top!
+            if (customPlans.length > 0) {
+                html += customPlans.map(p => `
+                    <div class="card" style="padding: 1.5rem; border-left: 5px solid var(--clr-ocean); background: #f0f7ff !important; margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+                            <div style="display: flex; align-items: center; gap: 0.6rem;">
+                                <h4 style="color: var(--clr-ocean); margin: 0; font-size: 1.1rem;">Dietitian Update: ${p.type}</h4>
+                                <span class="badge" style="background: var(--clr-ocean); color: white; font-size: 0.65rem; padding: 0.2rem 0.6rem; border-radius: 50px;">NEW PLAN</span>
+                            </div>
+                            <span style="font-size: 0.75rem; color: #64748b;">${p.date}</span>
+                        </div>
+                        <p style="font-size: 0.9rem; color: #1e293b; line-height: 1.5; background: white; padding: 1rem; border-radius: 12px; border: 1px solid rgba(0,0,0,0.05); white-space: pre-line;">${p.desc}</p>
+                    </div>
+                `).join('');
+            }
+
+            // Render default schedule
+            html += defaultDays.map(p => `
+                <div class="card" style="padding: 1.5rem; border-left: 5px solid ${p.status === 'Active' ? 'var(--primary)' : '#eee'};">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                        <h4 style="color: ${p.status === 'Active' ? 'var(--primary)' : '#1e293b'}; font-size: 1.1rem;">${p.day}</h4>
+                        <span class="badge" style="background: ${p.status === 'Active' ? 'rgba(44,110,73,0.1)' : 'rgba(0,0,0,0.04)'}; color: ${p.status === 'Active' ? 'var(--primary)' : '#64748b'}; font-size: 0.7rem; padding: 0.3rem 0.8rem; border-radius: 50px; font-weight: 600;">${p.status}</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                        <div style="background: #f8fafc; padding: 0.8rem; border-radius: 12px; border: 1px solid rgba(0,0,0,0.03);">
+                            <p style="font-size: 0.65rem; color: #64748b; text-transform: uppercase; font-weight: 700;">Breakfast</p>
+                            <p style="font-weight: 600; font-size: 0.85rem; color: #1e293b;">${p.meals.breakfast}</p>
+                        </div>
+                        <div style="background: #f8fafc; padding: 0.8rem; border-radius: 12px; border: 1px solid rgba(0,0,0,0.03);">
+                            <p style="font-size: 0.65rem; color: #64748b; text-transform: uppercase; font-weight: 700;">Lunch</p>
+                            <p style="font-weight: 600; font-size: 0.85rem; color: #1e293b;">${p.meals.lunch}</p>
+                        </div>
+                        <div style="background: #f8fafc; padding: 0.8rem; border-radius: 12px; border: 1px solid rgba(0,0,0,0.03);">
+                            <p style="font-size: 0.65rem; color: #64748b; text-transform: uppercase; font-weight: 700;">Dinner</p>
+                            <p style="font-weight: 600; font-size: 0.85rem; color: #1e293b;">${p.meals.dinner}</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            container.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        function downloadPDF() {
+            showToast('📄 Generating Diet Plan PDF...', 'info');
+            setTimeout(() => showToast('✅ Schedule downloaded!', 'success'), 1500);
+        }
+
+        // 📄 Reports Logic
+        function loadReports() {
+            const container = document.getElementById('reportsList');
+            if (!container) return;
+            const reports = JSON.parse(localStorage.getItem('aharax_reports')) || CustomerState.reports;
+            container.innerHTML = reports.map(r => `
+                <div class="card" style="padding: 1.2rem; display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <div style="background: rgba(44,110,73,0.1); padding: 0.6rem; border-radius: 10px; color: var(--primary);"><i data-lucide="file-text"></i></div>
+                        <div>
+                            <p style="font-weight: 700; font-size: 0.9rem; color: #1e293b;">${r.name}</p>
+                            <p style="font-size: 0.75rem; color: #64748b;">${r.type || 'Medical Report'} • ${r.date}</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="cta-button outline" style="padding: 0.4rem 1rem; font-size: 0.75rem;" onclick="showToast('Viewing ${r.name}...')">View</button>
+                        <button class="cta-button" style="padding: 0.4rem 1rem; font-size: 0.75rem;" onclick="showToast('Downloading ${r.name}...')">Download</button>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                showToast(`⬆️ Uploading ${file.name}...`, 'info');
+                setTimeout(() => {
+                    const reports = JSON.parse(localStorage.getItem('aharax_reports')) || CustomerState.reports;
+                    reports.unshift({ id: 'u' + Date.now(), name: file.name, date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }), type: 'User Upload', doctor: 'Self' });
+                    localStorage.setItem('aharax_reports', JSON.stringify(reports));
+                    loadReports();
+                    showToast('✅ Report uploaded and shared with Dr. Ananya Roy!', 'success');
+                    addActivityLog('You', `Uploaded health report: ${file.name}`, 'upload-cloud', 'var(--clr-ocean)');
+                }, 1200);
+            }
+        }
+
+        // 🗓️ Consultation Sync Logic
+        let selectedDateText = 'May 08';
+        function selectDate(el, date) {
+            document.querySelectorAll('.date-slot').forEach(s => {
+                s.style.background = 'white';
+                s.style.borderColor = 'rgba(0,0,0,0.05)';
+            });
+            el.style.background = 'rgba(30, 61, 51, 0.05)';
+            el.style.borderColor = 'var(--primary)';
+            selectedDateText = date;
+            const dateEl = document.getElementById('selectedDate');
+            if (dateEl) dateEl.innerText = date;
+        }
+
+        function confirmBooking() {
+            const btn = document.getElementById('confirmBtn');
+            if (btn) {
+                btn.innerText = 'Booking Session...';
+                btn.disabled = true;
+            }
+
+            setTimeout(() => {
+                if (btn) {
+                    btn.innerText = 'Booked!';
+                    btn.style.background = '#4ade80';
+                }
+
+                const appointments = JSON.parse(localStorage.getItem('aharax_appointments')) || [];
+                const newAppt = {
+                    id: Date.now(),
+                    client: 'Priya Sharma',
+                    type: 'Follow-up Session',
+                    time: `${selectedDateText}, 10:30 AM`,
+                    status: 'Pending'
+                };
+                appointments.unshift(newAppt);
+                localStorage.setItem('aharax_appointments', JSON.stringify(appointments));
+
+                const consultations = JSON.parse(localStorage.getItem('aharax_consultations')) || [];
+                consultations.unshift(newAppt);
+                localStorage.setItem('aharax_consultations', JSON.stringify(consultations));
+
+                showToast(`🗓️ Consultation request sent to Dr. Ananya Roy for ${selectedDateText}!`, 'success');
+                addActivityLog('You', `Requested consultation for ${selectedDateText}`, 'calendar', 'var(--clr-forest)');
+            }, 1200);
+        }
+
+        function loadConsultations() {
+            const consultations = JSON.parse(localStorage.getItem('aharax_consultations')) || [];
+            if (consultations.length > 0) {
+                const latest = consultations[0];
+                const statusBadge = document.querySelector('#consultationsTab .card div div div');
+                if (statusBadge) {
+                    statusBadge.innerText = `Session Status: ${latest.status || 'Pending'}`;
+                }
+            }
+        }
+
+        function joinVideo() {
+            showToast('🎥 Connecting to Dr. Ananya Roy...', 'success');
+            setTimeout(() => window.open('https://meet.google.com/new', '_blank'), 1000);
+        }
+
+        // 💬 Real-Time Chat System
+        function loadMessages() {
+            const container = document.getElementById('chat-container');
+            if (!container) return;
+            const msgs = JSON.parse(localStorage.getItem('aharax_messages')) || [
+                { from: 'dietitian', text: 'Hello Priya! How are you feeling with the Phase 2 meal plan?', time: '10:00 AM' },
+                { from: 'client', text: 'Feeling energetic! Hydro tracking is helping me stay consistent.', time: '10:05 AM' }
+            ];
+            container.innerHTML = msgs.map(m => `
+                <div style="align-self: ${m.from === 'client' ? 'flex-end' : 'flex-start'}; max-width: 75%;">
+                    <div style="background: ${m.from === 'client' ? 'var(--primary)' : 'white'}; 
+                                color: ${m.from === 'client' ? 'white' : '#1e293b'}; 
+                                padding: 1rem 1.2rem; 
+                                border-radius: ${m.from === 'client' ? '20px 20px 0 20px' : '0 20px 20px 20px'}; 
+                                font-size: 0.9rem; 
+                                border: ${m.from === 'client' ? 'none' : '1px solid rgba(0,0,0,0.05)'};
+                                box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+                        ${m.text}
+                    </div>
+                    <p style="font-size: 0.65rem; color: #64748b; margin-top: 0.4rem; text-align: ${m.from === 'client' ? 'right' : 'left'};">
+                        ${m.time || 'Just now'}
+                    </p>
+                </div>
+            `).join('');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            if (!input || !input.value.trim()) return;
+            const text = input.value.trim();
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const msgs = JSON.parse(localStorage.getItem('aharax_messages')) || [];
+            msgs.push({ from: 'client', text: text, client: 'Priya Sharma', time: time });
+            localStorage.setItem('aharax_messages', JSON.stringify(msgs));
+            input.value = '';
+            loadMessages();
+            addActivityLog('You', 'Sent message to Dietitian', 'message-square', 'var(--primary)');
+        }
+
+        // 🩺 Sync Doctor Profile from Dietitian Settings
+        function syncDoctorProfile() {
+            const doc = JSON.parse(localStorage.getItem('aharax_doctor_profile'));
+            if (doc) {
+                const docName = document.getElementById('consultationDocName');
+                const docAvatar = document.getElementById('consultationDocAvatar');
+                const chatName = document.getElementById('chatDocName');
+                const chatAvatar = document.getElementById('chatDocAvatar');
+                if (docName) docName.innerText = doc.name;
+                if (docAvatar) docAvatar.src = doc.avatar || doc.photo;
+                if (chatName) chatName.innerText = doc.name;
+                if (chatAvatar) chatAvatar.src = doc.avatar || doc.photo;
+            }
+        }
+
+        // 📊 Interactive Chart Initialization
+        function initOverviewCharts() {
+            const miniCanvas = document.getElementById('weightMiniChart');
+            if (miniCanvas) {
+                const miniCtx = miniCanvas.getContext('2d');
+                miniWeightChartInstance = new Chart(miniCtx, {
+                    type: 'line',
+                    data: {
+                        labels: [1, 2, 3, 4, 5, 6, 7],
+                        datasets: [{
+                            data: [64.0, 63.8, 63.5, 63.2, 63.0, 62.8, 62.5],
+                            borderColor: '#a66857',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            pointRadius: 0,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: { x: { display: false }, y: { display: false } }
+                    }
+                });
+            }
+
+            const mainCanvas = document.getElementById('weightChart');
+            if (mainCanvas) {
+                const ctx = mainCanvas.getContext('2d');
+                weightChartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                        datasets: [{
+                            label: 'Weight (kg)',
+                            data: CustomerState.weightHistory,
+                            borderColor: '#2C6E49',
+                            backgroundColor: 'rgba(44, 110, 73, 0.06)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#2C6E49',
+                            pointRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { grid: { color: 'rgba(0,0,0,0.03)' }, ticks: { color: '#64748b' } },
+                            x: { grid: { display: false }, ticks: { color: '#64748b' } }
+                        }
+                    }
+                });
+            }
+        }
+
+        function initProgressCharts() {
+            const canvas = document.getElementById('detailedProgressChart');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            detailedProgressChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Wk 1', 'Wk 2', 'Wk 3', 'Wk 4', 'Wk 5', 'Wk 6'],
+                    datasets: [
+                        {
+                            label: 'Weight (kg)',
+                            data: [65.2, 64.8, 64.5, 64.5, 64.2, 64.1],
+                            borderColor: '#2C6E49',
+                            backgroundColor: 'rgba(44, 110, 73, 0.08)',
+                            borderWidth: 3,
+                            yAxisID: 'y',
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Body Fat %',
+                            data: [27.3, 27.0, 26.8, 26.8, 26.6, 26.5],
+                            borderColor: '#fbbf24',
+                            backgroundColor: 'transparent',
+                            borderDash: [5, 5],
+                            borderWidth: 2,
+                            yAxisID: 'y1',
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: { legend: { position: 'top', labels: { color: '#1e293b', font: { weight: '600' } } } },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#64748b' } },
+                        y: {
+                            type: 'linear', display: true, position: 'left',
+                            title: { display: true, text: 'Weight (kg)', color: '#2C6E49' },
+                            grid: { color: 'rgba(0,0,0,0.04)' },
+                            ticks: { color: '#64748b' }
+                        },
+                        y1: {
+                            type: 'linear', display: true, position: 'right',
+                            title: { display: true, text: 'Body Fat %', color: '#fbbf24' },
+                            grid: { drawOnChartArea: false },
+                            ticks: { color: '#64748b' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Timeframe filter handler for Health Progression tab
+        function updateProgressTimeframe(period, btn) {
+            if (!detailedProgressChartInstance) return;
+            document.querySelectorAll('.timeframe-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
+            const timeframeData = {
+                '1m': {
+                    labels: ['Wk 1', 'Wk 2', 'Wk 3', 'Wk 4'],
+                    weight: [65.2, 64.8, 64.5, 64.1],
+                    fat: [27.3, 27.0, 26.8, 26.5],
+                    weightVal: '64.1 kg', weightChange: '-1.1 kg total',
+                    fatVal: '26.5%', fatChange: '-0.8% total',
+                    muscleVal: '42.8 kg', muscleChange: '+0.4 kg total'
+                },
+                '3m': {
+                    labels: ['Month 1', 'Month 2', 'Month 3'],
+                    weight: [67.5, 65.8, 64.1],
+                    fat: [29.1, 27.8, 26.5],
+                    weightVal: '64.1 kg', weightChange: '-3.4 kg total',
+                    fatVal: '26.5%', fatChange: '-2.6% total',
+                    muscleVal: '42.8 kg', muscleChange: '+2.5 kg total'
+                },
+                '6m': {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    weight: [70.2, 68.9, 67.5, 66.1, 65.0, 64.1],
+                    fat: [31.2, 30.0, 28.9, 28.0, 27.2, 26.5],
+                    weightVal: '64.1 kg', weightChange: '-6.1 kg total',
+                    fatVal: '26.5%', fatChange: '-4.7% total',
+                    muscleVal: '42.8 kg', muscleChange: '+4.2 kg total'
+                }
+            };
+
+            const data = timeframeData[period] || timeframeData['1m'];
+            detailedProgressChartInstance.data.labels = data.labels;
+            detailedProgressChartInstance.data.datasets[0].data = data.weight;
+            detailedProgressChartInstance.data.datasets[1].data = data.fat;
+            detailedProgressChartInstance.update();
+
+            const wVal = document.getElementById('progressWeightVal');
+            const wChange = document.getElementById('progressWeightChange');
+            const fVal = document.getElementById('progressFatVal');
+            const fChange = document.getElementById('progressFatChange');
+            const mVal = document.getElementById('progressMuscleVal');
+            const mChange = document.getElementById('progressMuscleChange');
+
+            if (wVal) wVal.innerText = data.weightVal;
+            if (wChange) wChange.innerText = data.weightChange;
+            if (fVal) fVal.innerText = data.fatVal;
+            if (fChange) fChange.innerText = data.fatChange;
+            if (mVal) mVal.innerText = data.muscleVal;
+            if (mChange) mChange.innerText = data.muscleChange;
+
+            showToast(`📈 Analytics view updated to ${period.toUpperCase()}`, 'info');
+        }
+
+        // Notification Center Toggle
+        let notificationsOpen = false;
+        function toggleNotifications() {
+            const center = document.getElementById('notificationCenter');
+            if (!center) return;
+            notificationsOpen = !notificationsOpen;
+            center.style.right = notificationsOpen ? '0' : '-400px';
+        }
+
+        // Global Search Filter
+        function globalSearch(query) {
+            query = query.toLowerCase().trim();
+            const cards = document.querySelectorAll('.card, .stat-card');
+            cards.forEach(card => {
+                if (card.id === 'notificationCenter' || card.closest('.sidebar')) return;
+                const text = card.innerText.toLowerCase();
+                if (!query || text.includes(query)) {
+                    card.style.opacity = '1';
+                } else {
+                    card.style.opacity = '0.25';
+                }
+            });
+        }
+
+        // 🚀 Real-Time Storage Listener (2-Way Interconnection Loop)
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'aharax_messages') {
+                loadMessages();
+                showToast('💬 New message received from Dr. Ananya Roy!', 'info');
+            }
+            if (e.key === 'aharax_plans') {
+                loadPlans();
+                showToast('🥗 Your Dietitian updated your Diet Plan schedule!', 'success');
+            }
+            if (e.key === 'aharax_doctor_profile') {
+                syncDoctorProfile();
+            }
+            if (e.key === 'aharax_consultations' || e.key === 'aharax_appointments') {
+                loadConsultations();
+                showToast('🗓️ Consultation status updated by Dietitian!', 'info');
+            }
+        });
+
+        // 🚀 Bootstrap Page Load
+        window.onload = () => {
+            updateOverviewStats();
+            initOverviewCharts();
+            initProgressCharts();
+            loadReports();
+            loadMessages();
+            loadPlans();
+            syncDoctorProfile();
+
+            // Set initial health tip
+            const tipEl = document.querySelector('.panel-main .card p');
+            if (tipEl && CustomerState.tips) {
+                tipEl.innerText = `"${CustomerState.tips[0]}"`;
+            }
+
+            // Trigger score animation
+            setTimeout(() => {
+                const circle = document.getElementById('healthScoreCircle');
+                if (circle) circle.style.strokeDashoffset = '37.68';
+            }, 400);
+
+            lucide.createIcons();
+        };
+
+        window.onfocus = () => {
+            syncDoctorProfile();
+            loadMessages();
+            loadPlans();
+        };
+    </script>
+</body>
+</html>
