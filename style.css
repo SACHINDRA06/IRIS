@@ -691,3 +691,241 @@ footer {
   border-color: var(--primary);
   box-shadow: 0 10px 20px rgba(30, 61, 51, 0.15);
 }
+
+/* ==========================================================
+   1. DIET PLAN: WEEKLY SCHEDULE BANNER REFINEMENT
+   Lighter, elegant forest gradient + crisp visible typography
+========================================================== */
+.diet-banner,
+.weekly-schedule-banner,
+[class*="weekly-schedule"] {
+  background: linear-gradient(135deg, #2C6E49 0%, #3e885d 100%) !important;
+  color: #ffffff !important;
+  padding: 1.8rem 2.2rem !important;
+  border-radius: 20px !important;
+  box-shadow: 0 10px 25px rgba(44, 110, 73, 0.18) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+.diet-banner h2,
+.diet-banner h3,
+.weekly-schedule-banner h2,
+.weekly-schedule-banner h3,
+.weekly-schedule-banner .banner-title {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  font-size: 1.5rem !important;
+  margin-bottom: 0.3rem !important;
+}
+
+.diet-banner p,
+.weekly-schedule-banner p,
+.weekly-schedule-banner .banner-sub {
+  color: #e2f1e8 !important;
+  font-weight: 500 !important;
+  font-size: 0.95rem !important;
+}
+
+/* Download PDF Button Styling */
+.diet-banner .btn,
+.weekly-schedule-banner .btn,
+.weekly-schedule-banner button,
+.weekly-schedule-banner a {
+  background: rgba(255, 255, 255, 0.18) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  border-radius: 50px !important;
+  font-weight: 600 !important;
+  padding: 0.65rem 1.4rem !important;
+  transition: all 0.25s ease !important;
+}
+
+.diet-banner .btn:hover,
+.weekly-schedule-banner .btn:hover,
+.weekly-schedule-banner button:hover,
+.weekly-schedule-banner a:hover {
+  background: #ffffff !important;
+  color: #2C6E49 !important;
+}
+
+/* ==========================================================
+   2. REWARDS: 4-COLUMN SINGLE ROW COMPACT GRID
+   Forces all 4 cards (Rewards, Coupons, Minutes, Referrals)
+   into 1 neat row with compact padding.
+========================================================== */
+.rewards-grid,
+.reward-stats-grid,
+#rewards .stats-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 1.2rem !important;
+  margin-bottom: 2rem !important;
+}
+
+/* Compact Card Sizing */
+.rewards-grid .stat-card,
+.reward-stats-grid .stat-card,
+#rewards .stat-card {
+  padding: 1.2rem 1.4rem !important;
+  min-height: 125px !important;
+  border-radius: 18px !important;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03) !important;
+}
+
+.rewards-grid .stat-label,
+.reward-stats-grid .stat-label,
+#rewards .stat-label {
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  color: #64748b !important;
+  letter-spacing: 0.05em !important;
+}
+
+.rewards-grid .stat-value,
+.reward-stats-grid .stat-value,
+#rewards .stat-value {
+  font-size: 1.75rem !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  margin: 0.2rem 0 !important;
+}
+
+.rewards-grid .stat-meta,
+.reward-stats-grid .stat-meta,
+#rewards .stat-meta {
+  font-size: 0.78rem !important;
+  font-weight: 500 !important;
+  color: #64748b !important;
+}
+
+/* ==========================================================
+   3. MESSAGES: ELEVATED CHAT CONTAINER & BUBBLES
+   Distinct white card elevated from grey background canvas
+========================================================== */
+.chat-container,
+.messages-box,
+.chat-wrapper,
+#messages .card {
+  background: #ffffff !important;
+  border-radius: 20px !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06) !important;
+  overflow: hidden !important;
+}
+
+/* Chat Header */
+.chat-header {
+  padding: 1.2rem 1.8rem !important;
+  background: #ffffff !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+}
+
+.chat-header h4,
+.chat-header .user-name {
+  color: #0f172a !important;
+  font-weight: 700 !important;
+}
+
+.chat-header .status-active {
+  color: #16a34a !important;
+  font-weight: 600 !important;
+  font-size: 0.8rem !important;
+}
+
+/* Chat Body (Soft Tint to Differentiate from Bubbles) */
+.chat-messages,
+.chat-body,
+.message-history {
+  background: #f8fafc !important;
+  padding: 1.8rem !important;
+  min-height: 380px !important;
+}
+
+/* Incoming Message Bubble (Elevated White on Soft Grey) */
+.message-incoming,
+.msg-received,
+.message-bubble.incoming {
+  background: #ffffff !important;
+  color: #1e293b !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 16px 16px 16px 4px !important;
+  padding: 0.75rem 1.2rem !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+  font-weight: 500 !important;
+}
+
+/* Outgoing Message Bubble (Brand Forest Green) */
+.message-outgoing,
+.msg-sent,
+.message-bubble.outgoing {
+  background: #2C6E49 !important;
+  color: #ffffff !important;
+  border-radius: 16px 16px 4px 16px !important;
+  padding: 0.75rem 1.2rem !important;
+  box-shadow: 0 4px 12px rgba(44, 110, 73, 0.25) !important;
+  font-weight: 500 !important;
+}
+
+.message-time {
+  font-size: 0.72rem !important;
+  color: #94a3b8 !important;
+  margin-top: 4px !important;
+}
+
+/* Message Input Area */
+.chat-input-container,
+.message-input-box {
+  background: #ffffff !important;
+  border-top: 1px solid #e2e8f0 !important;
+  padding: 1rem 1.5rem !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 1rem !important;
+}
+
+.chat-input-container input,
+.message-input-box input {
+  background: #f1f5f9 !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 50px !important;
+  padding: 0.75rem 1.4rem !important;
+  color: #0f172a !important;
+  outline: none !important;
+}
+
+.chat-input-container input::placeholder {
+  color: #94a3b8 !important;
+}
+
+.chat-send-btn {
+  background: #2C6E49 !important;
+  color: #ffffff !important;
+  border-radius: 50% !important;
+  width: 44px !important;
+  height: 44px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(44, 110, 73, 0.3) !important;
+  cursor: pointer !important;
+  transition: transform 0.2s ease !important;
+}
+
+.chat-send-btn:hover {
+  transform: scale(1.05) !important;
+  background: #24583a !important;
+}
+
+/* Responsive Fallback for Smaller Screens */
+@media (max-width: 1024px) {
+  .rewards-grid,
+  .reward-stats-grid,
+  #rewards .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
